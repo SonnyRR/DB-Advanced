@@ -1,8 +1,7 @@
-﻿using System.Linq;
-using System.Text;
-
-namespace SoftUni
+﻿namespace SoftUni
 {
+    using System.Linq;
+    using System.Text;
     using System;
     using SoftUni.Data;
     using SoftUni.Models;
@@ -16,7 +15,7 @@ namespace SoftUni
 
             using (SoftUniContext context = new SoftUniContext())
             {
-                string output = GetEmployeesFullInformation(context);
+                string output = GetEmployeesWithSalaryOver50000(context);
                 Console.WriteLine(output);               
             }
         }
@@ -37,6 +36,26 @@ namespace SoftUni
                 .ToList()
                 .ForEach(
                     x => builder.AppendLine($"{x.FirstName} {x.LastName} {x.MiddleName} {x.JobTitle} {x.Salary:F2}")
+                );
+
+            return builder.ToString();
+        }
+
+        public static string GetEmployeesWithSalaryOver50000(SoftUniContext context)
+        {
+            StringBuilder builder = new StringBuilder();
+
+            context.Employees      
+                .Where(x => x.Salary > 50_000)
+                .Select(x => new
+                {
+                    FirstName = x.FirstName,
+                    Salary = x.Salary
+                })
+                .OrderBy(x => x.FirstName)
+                .ToList()
+                .ForEach(
+                    x => builder.AppendLine($"{x.FirstName} - {x.Salary:F2}")
                 );
 
             return builder.ToString();
