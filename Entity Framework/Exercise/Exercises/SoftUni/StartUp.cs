@@ -15,7 +15,7 @@
 
             using (SoftUniContext context = new SoftUniContext())
             {
-                string output = GetEmployeesWithSalaryOver50000(context);
+                string output = GetEmployeesFromResearchAndDevelopment(context);
                 Console.WriteLine(output);               
             }
         }
@@ -56,6 +56,29 @@
                 .ToList()
                 .ForEach(
                     x => builder.AppendLine($"{x.FirstName} - {x.Salary:F2}")
+                );
+
+            return builder.ToString();
+        }
+
+        public static string GetEmployeesFromResearchAndDevelopment(SoftUniContext context)
+        {
+            StringBuilder builder = new StringBuilder();
+
+            context.Employees
+                .Where(x => x.Department.Name == "Research and Development")
+                .Select(x => new
+                {
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    DepartmentName = x.Department.Name,
+                    Salary = x.Salary
+                })
+                .OrderBy(x => x.Salary)
+                .ThenByDescending(x => x.FirstName)
+                .ToList()
+                .ForEach(
+                    x => builder.AppendLine($"{x.FirstName} {x.LastName} from {x.DepartmentName} - ${x.Salary:F2}")
                 );
 
             return builder.ToString();
