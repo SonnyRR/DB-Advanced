@@ -1,4 +1,7 @@
-﻿namespace SoftUni
+﻿using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.EntityFrameworkCore.SqlServer.Query.ExpressionTranslators.Internal;
+
+namespace SoftUni
 {
     using System.Linq;
     using System.Text;
@@ -15,7 +18,7 @@
 
             using (SoftUniContext context = new SoftUniContext())
             {
-                string output = GetEmployeesFromResearchAndDevelopment(context);
+                string output = AddNewAddressToEmployee(context);
                 Console.WriteLine(output);               
             }
         }
@@ -82,6 +85,31 @@
                 );
 
             return builder.ToString();
+        }
+
+        public static string AddNewAddressToEmployee(SoftUniContext context)
+        {
+            StringBuilder builder = new StringBuilder();
+
+            Address addressToAdd = new Address() { AddressText = "Vitoshka 15", TownId = 4};
+            context.Addresses.Add(addressToAdd);
+
+            Employee employeeToModify = context.Employees
+                .FirstOrDefault(x => x.LastName == "Nakov");
+
+            employeeToModify.Address = addressToAdd;
+
+            context.SaveChanges();
+
+            context.Employees
+                .OrderByDescending(x => x.AddressId)
+                .Select(x => new {Address = x.Address.AddressText})
+                .Take(10)
+                .ToList()
+                .ForEach(x => builder.AppendLine(x.Address));
+
+
+        return builder.ToString();
         }
     }
 }
