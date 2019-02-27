@@ -116,14 +116,12 @@ namespace SoftUni
         public static string GetEmployeesInPeriod(SoftUniContext context)
         {
             StringBuilder builder = new StringBuilder();
-            DateTime desiredStartDate = new DateTime(2001, 01, 01);
-            DateTime desiredEndDate = new DateTime(2003, 12, 31);
 
             string dateFormat = @"M/d/yyyy h:mm:ss tt";
 
             var employees = context.Employees
                 .Where(x => x.EmployeesProjects
-                    .Any(y => y.Project.StartDate >= desiredStartDate && y.Project.EndDate <= desiredEndDate))
+                    .Any(y => y.Project.StartDate.Year >= 2001 && y.Project.StartDate.Year <= 2003))
                 .Select(x => new
                 {
                     FirstName = x.FirstName,
