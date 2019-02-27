@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Internal;
+﻿using System.Globalization;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.ExpressionTranslators.Internal;
 
 namespace SoftUni
@@ -18,8 +19,8 @@ namespace SoftUni
 
             using (SoftUniContext context = new SoftUniContext())
             {
-                string output = AddNewAddressToEmployee(context);
-                Console.WriteLine(output);               
+                string output = GetEmployeesInPeriod(context);
+                Console.WriteLine(output);
             }
         }
 
@@ -48,7 +49,7 @@ namespace SoftUni
         {
             StringBuilder builder = new StringBuilder();
 
-            context.Employees      
+            context.Employees
                 .Where(x => x.Salary > 50_000)
                 .Select(x => new
                 {
@@ -91,7 +92,7 @@ namespace SoftUni
         {
             StringBuilder builder = new StringBuilder();
 
-            Address addressToAdd = new Address() { AddressText = "Vitoshka 15", TownId = 4};
+            Address addressToAdd = new Address() { AddressText = "Vitoshka 15", TownId = 4 };
             context.Addresses.Add(addressToAdd);
 
             Employee employeeToModify = context.Employees
@@ -103,13 +104,64 @@ namespace SoftUni
 
             context.Employees
                 .OrderByDescending(x => x.AddressId)
-                .Select(x => new {Address = x.Address.AddressText})
+                .Select(x => new { Address = x.Address.AddressText })
                 .Take(10)
                 .ToList()
                 .ForEach(x => builder.AppendLine(x.Address));
 
+            return builder.ToString();
 
-        return builder.ToString();
+        }
+
+        public static string GetEmployeesInPeriod(SoftUniContext context)
+        {
+            StringBuilder builder = new StringBuilder();
+            DateTime desiredStartDate = new DateTime(2001, 01, 01);
+            DateTime desiredEndDate = new DateTime(2003, 12, 31);
+
+            string dateFormat = @"M/d/yyyy h:mm:ss tt";
+
+            var employees = context.Employees
+                .Where(x => x.EmployeesProjects
+                    .Any(y => y.Project.StartDate >= desiredStartDate && y.Project.EndDate <= desiredEndDate))
+                .Select(x => new
+                {
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    ManagerFirstName = x.Manager.FirstName,
+                    ManagerLastName = x.Manager.LastName,
+                    Projects = x.EmployeesProjects
+                        .Select(y => new
+                        {
+                            ProjectName = y.Project.Name,
+                            StartDate = y.Project.StartDate,
+                            EndDate = y.Project.EndDate
+                        })
+
+                })
+                .Take(10)
+                .ToList();
+
+            foreach (var emp in employees)
+            {
+                builder.AppendLine(
+                    $"{emp.FirstName} {emp.LastName} - Manager: {emp.ManagerFirstName} {emp.ManagerLastName}");
+
+                foreach (var pr in emp.Projects)
+                {
+
+                    string endDate = pr.EndDate == null
+                        ? "not finished"
+                        : ((DateTime)pr.EndDate).ToString(dateFormat, CultureInfo.InvariantCulture);
+
+                    string startDate = pr.StartDate.ToString(dateFormat, CultureInfo.InvariantCulture);
+
+                    builder.AppendLine(
+                        $"--{pr.ProjectName} - {startDate} - {endDate}");
+                }
+            }
+
+            return builder.ToString();
         }
     }
 }
