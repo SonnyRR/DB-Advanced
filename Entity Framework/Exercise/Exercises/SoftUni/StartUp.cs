@@ -19,8 +19,9 @@ namespace SoftUni
 
             using (SoftUniContext context = new SoftUniContext())
             {
-                string output = GetAddressesByTown(context);
+                string output = GetLatestProjects(context);
                 Console.WriteLine(output);
+
             }
         }
 
@@ -171,7 +172,7 @@ namespace SoftUni
                 {
                     AddressText = x.AddressText,
                     CityText = x.Town.Name,
-                    EmployeesCount = x.Employees.Count()
+                    EmployeesCount = x.Employees.Count
                 })
                 .OrderByDescending(x => x.EmployeesCount)
                 .ThenBy(x => x.CityText)
@@ -179,6 +180,96 @@ namespace SoftUni
                 .Take(10)
                 .ToList()
                 .ForEach(x => builder.AppendLine($"{x.AddressText}, {x.CityText} - {x.EmployeesCount} employees"));
+
+            return builder.ToString();
+        }
+
+        public static string GetEmployee147(SoftUniContext context)
+        {
+            StringBuilder builder = new StringBuilder();
+
+            var employee = context.Employees
+                .Where(x => x.EmployeeId == 147)
+                .Select(x => new
+                {
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    JobTitle = x.JobTitle,
+                    Projects = x.EmployeesProjects.Select(y => new { ProjectName = y.Project.Name }).ToList()
+                })
+                .FirstOrDefault();
+
+            builder.AppendLine($"{employee.FirstName} {employee.LastName} - {employee.JobTitle}");
+
+            foreach (var employeeProject in employee.Projects.OrderBy(x => x.ProjectName))
+            {
+                builder.AppendLine(employeeProject.ProjectName);
+            }
+
+            return builder.ToString();
+        }
+
+        public static string GetDepartmentsWithMoreThan5Employees(SoftUniContext context)
+        {
+            StringBuilder builder = new StringBuilder();
+
+            context.Departments
+                .Where(x => x.Employees.Count > 5)
+                .OrderBy(x => x.Employees.Count)
+                .ThenBy(x => x.Name)
+                .Select(x => new
+                {
+                    DepartmentName = x.Name,
+                    ManagerName = $"{x.Manager.FirstName} {x.Manager.LastName}",
+                    Employees = x.Employees
+                        .Select(y => new
+                        {
+                            FirstName = y.FirstName,
+                            LastName = y.LastName,
+                            EmployeeName = $"{y.FirstName} {y.LastName}",
+                            Title = y.JobTitle
+                        })
+                        .OrderBy(e => e.FirstName)
+                        .ThenBy(e => e.LastName)
+                        .ToList()
+                })
+
+                .ToList()
+                .ForEach(x =>
+                {
+                    builder.AppendLine($"{x.DepartmentName} - {x.ManagerName}");
+                    x.Employees.ForEach(y =>
+                    {
+                        builder.AppendLine($"{y.EmployeeName} - {y.Title}");
+
+                    });
+                });
+
+            return builder.ToString();
+        }
+        public static string GetLatestProjects(SoftUniContext context)
+        {
+            StringBuilder builder = new StringBuilder();
+            string dateFormat = @"M/d/yyyy h:mm:ss tt";
+
+            context.Projects
+                .OrderBy(x => x.Name)
+                .ThenByDescending(x => x.StartDate)
+                .Select(x => new
+                {
+                    Name = x.Name,
+                    Description = x.Description,
+                    StartDate = x.StartDate
+                })
+                .Take(10)
+                .ToList()
+                .ForEach(x =>
+                {
+                    builder.AppendLine(x.Name);
+                    builder.AppendLine(x.Description);
+                    builder.AppendLine(x.StartDate.ToString(dateFormat, CultureInfo.InvariantCulture));
+                });
+
 
             return builder.ToString();
         }
