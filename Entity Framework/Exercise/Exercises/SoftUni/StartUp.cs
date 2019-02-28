@@ -233,7 +233,7 @@ namespace SoftUni
                         .ThenBy(e => e.LastName)
                         .ToList()
                 })
-
+                
                 .ToList()
                 .ForEach(x =>
                 {
@@ -267,7 +267,7 @@ namespace SoftUni
                 {
                     builder.AppendLine(x.Name);
                     builder.AppendLine(x.Description);
-                    builder.AppendLine(x.StartDate.ToString(dateFormat, CultureInfo.InvariantCulture));
+                    builder.AppendLine(x.StartDate.ToString(dateFormat,CultureInfo.InvariantCulture));
                 });
 
 
