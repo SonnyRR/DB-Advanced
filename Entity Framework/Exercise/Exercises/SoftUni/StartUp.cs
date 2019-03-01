@@ -1,4 +1,6 @@
 ﻿using System.Globalization;
+using System.Security.Cryptography.X509Certificates;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.ExpressionTranslators.Internal;
 
@@ -19,7 +21,7 @@ namespace SoftUni
 
             using (SoftUniContext context = new SoftUniContext())
             {
-                string output = GetLatestProjects(context);
+                string output = DeleteProjectById(context);
                 Console.WriteLine(output);
 
             }
@@ -233,7 +235,7 @@ namespace SoftUni
                         .ThenBy(e => e.LastName)
                         .ToList()
                 })
-                
+
                 .ToList()
                 .ForEach(x =>
                 {
@@ -247,6 +249,7 @@ namespace SoftUni
 
             return builder.ToString();
         }
+
         public static string GetLatestProjects(SoftUniContext context)
         {
             StringBuilder builder = new StringBuilder();
@@ -267,11 +270,101 @@ namespace SoftUni
                 {
                     builder.AppendLine(x.Name);
                     builder.AppendLine(x.Description);
-                    builder.AppendLine(x.StartDate.ToString(dateFormat,CultureInfo.InvariantCulture));
+                    builder.AppendLine(x.StartDate.ToString(dateFormat, CultureInfo.InvariantCulture));
                 });
 
 
             return builder.ToString();
+        }
+
+        public static string IncreaseSalaries(SoftUniContext context)
+        {
+
+            StringBuilder builder = new StringBuilder();
+
+            string[] departments = new[]
+            {
+                "Engineering",
+                "Tool Design",
+                "Marketing",
+                "Information Services"
+            };
+
+            var employeesToUpdate = context.Employees
+                .Where(x => departments.Contains(x.Department.Name))
+                .ToList();
+
+            foreach (var emp in employeesToUpdate.OrderBy(x => x.FirstName).ThenBy(x => x.LastName))
+            {
+                emp.Salary *= 1.12m;
+                builder.AppendLine($"{emp.FirstName} {emp.LastName} (${emp.Salary:F2})");
+            }
+
+            context.SaveChanges();
+
+
+            return builder.ToString();
+
+        }
+
+        public static string GetEmployeesByFirstNameStartingWithSa(SoftUniContext context)
+        {
+            StringBuilder builder = new StringBuilder();
+
+            context.Employees
+                .Where(x => EF.Functions.Like(x.FirstName, "sa%"))
+                .Select(x => new
+                {
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    JobTitle = x.JobTitle,
+                    Salary = x.Salary
+                })
+                .OrderBy(x => x.FirstName)
+                .ThenBy(x => x.LastName)
+                .ToList()
+                .ForEach(x =>
+                {
+                    builder.AppendLine($"{x.FirstName} {x.LastName} - {x.JobTitle} - (${x.Salary:F2})");
+                });
+
+            return builder.ToString();
+
+        }
+
+        public static string DeleteProjectById(SoftUniContext context)
+        {
+            StringBuilder builder = new StringBuilder();
+
+            var project = context.Projects
+                .FirstOrDefault(x => x.ProjectId == 2);
+
+
+            var empProjects = context.EmployeesProjects
+                .Where(x => x.ProjectId == project.ProjectId)
+                .ToList();
+
+            context.EmployeesProjects.RemoveRange(empProjects);
+
+            context.Projects.Remove(project);
+
+
+            context.Projects
+                .Select(x => new
+                {
+                    Name = x.Name
+                })
+                .Take(10)
+                .ToList()
+                .ForEach(x =>
+                {
+                    builder.AppendLine(x.Name);
+                });
+
+            context.SaveChanges();
+
+            return builder.ToString();
+
         }
     }
 }
