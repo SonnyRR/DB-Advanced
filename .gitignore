@@ -3,8 +3,8 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-# Added by VK
-*.zip
+# Custom
+# This removes macOS junk directory files.
 .DS_Store
 
 
