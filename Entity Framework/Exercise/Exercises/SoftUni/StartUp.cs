@@ -358,7 +358,8 @@ namespace SoftUni
                 .ToList()
                 .ForEach(x =>
                 {
-                    builder.AppendLine(x.Name);
+                    builder.AppendLine(x.Name)
+
                 });
 
             context.SaveChanges();
