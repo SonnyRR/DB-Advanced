@@ -5,6 +5,7 @@
 
 # Added by VK
 *.zip
+.DS_Store
 
 
 # User-specific files
