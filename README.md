@@ -9,6 +9,7 @@
     <li>Introduction to Entity Framework Core</li>
     <li>Code First</li>
     <li>Entity Relations</li>
+    <li>Advanced Relations and Aggregation</li>
     <li><i>TODO...</i>
 </ol>
 

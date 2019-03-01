@@ -1,4 +1,6 @@
 ﻿using System.Globalization;
+using System.Security.Cryptography.X509Certificates;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.ExpressionTranslators.Internal;
 
@@ -19,8 +21,9 @@ namespace SoftUni
 
             using (SoftUniContext context = new SoftUniContext())
             {
-                string output = GetEmployeesInPeriod(context);
+                string output = DeleteProjectById(context);
                 Console.WriteLine(output);
+
             }
         }
 
@@ -116,14 +119,12 @@ namespace SoftUni
         public static string GetEmployeesInPeriod(SoftUniContext context)
         {
             StringBuilder builder = new StringBuilder();
-            DateTime desiredStartDate = new DateTime(2001, 01, 01);
-            DateTime desiredEndDate = new DateTime(2003, 12, 31);
 
             string dateFormat = @"M/d/yyyy h:mm:ss tt";
 
             var employees = context.Employees
                 .Where(x => x.EmployeesProjects
-                    .Any(y => y.Project.StartDate >= desiredStartDate && y.Project.EndDate <= desiredEndDate))
+                    .Any(y => y.Project.StartDate.Year >= 2001 && y.Project.StartDate.Year <= 2003))
                 .Select(x => new
                 {
                     FirstName = x.FirstName,
@@ -162,6 +163,209 @@ namespace SoftUni
             }
 
             return builder.ToString();
+        }
+
+        public static string GetAddressesByTown(SoftUniContext context)
+        {
+            StringBuilder builder = new StringBuilder();
+
+            context.Addresses
+                .Select(x => new
+                {
+                    AddressText = x.AddressText,
+                    CityText = x.Town.Name,
+                    EmployeesCount = x.Employees.Count
+                })
+                .OrderByDescending(x => x.EmployeesCount)
+                .ThenBy(x => x.CityText)
+                .ThenBy(x => x.AddressText)
+                .Take(10)
+                .ToList()
+                .ForEach(x => builder.AppendLine($"{x.AddressText}, {x.CityText} - {x.EmployeesCount} employees"));
+
+            return builder.ToString();
+        }
+
+        public static string GetEmployee147(SoftUniContext context)
+        {
+            StringBuilder builder = new StringBuilder();
+
+            var employee = context.Employees
+                .Where(x => x.EmployeeId == 147)
+                .Select(x => new
+                {
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    JobTitle = x.JobTitle,
+                    Projects = x.EmployeesProjects.Select(y => new { ProjectName = y.Project.Name }).ToList()
+                })
+                .FirstOrDefault();
+
+            builder.AppendLine($"{employee.FirstName} {employee.LastName} - {employee.JobTitle}");
+
+            foreach (var employeeProject in employee.Projects.OrderBy(x => x.ProjectName))
+            {
+                builder.AppendLine(employeeProject.ProjectName);
+            }
+
+            return builder.ToString();
+        }
+
+        public static string GetDepartmentsWithMoreThan5Employees(SoftUniContext context)
+        {
+            StringBuilder builder = new StringBuilder();
+
+            context.Departments
+                .Where(x => x.Employees.Count > 5)
+                .OrderBy(x => x.Employees.Count)
+                .ThenBy(x => x.Name)
+                .Select(x => new
+                {
+                    DepartmentName = x.Name,
+                    ManagerName = $"{x.Manager.FirstName} {x.Manager.LastName}",
+                    Employees = x.Employees
+                        .Select(y => new
+                        {
+                            FirstName = y.FirstName,
+                            LastName = y.LastName,
+                            EmployeeName = $"{y.FirstName} {y.LastName}",
+                            Title = y.JobTitle
+                        })
+                        .OrderBy(e => e.FirstName)
+                        .ThenBy(e => e.LastName)
+                        .ToList()
+                })
+
+                .ToList()
+                .ForEach(x =>
+                {
+                    builder.AppendLine($"{x.DepartmentName} - {x.ManagerName}");
+                    x.Employees.ForEach(y =>
+                    {
+                        builder.AppendLine($"{y.EmployeeName} - {y.Title}");
+
+                    });
+                });
+
+            return builder.ToString();
+        }
+
+        public static string GetLatestProjects(SoftUniContext context)
+        {
+            StringBuilder builder = new StringBuilder();
+            string dateFormat = @"M/d/yyyy h:mm:ss tt";
+
+            context.Projects
+                .OrderBy(x => x.Name)
+                .ThenByDescending(x => x.StartDate)
+                .Select(x => new
+                {
+                    Name = x.Name,
+                    Description = x.Description,
+                    StartDate = x.StartDate
+                })
+                .Take(10)
+                .ToList()
+                .ForEach(x =>
+                {
+                    builder.AppendLine(x.Name);
+                    builder.AppendLine(x.Description);
+                    builder.AppendLine(x.StartDate.ToString(dateFormat, CultureInfo.InvariantCulture));
+                });
+
+
+            return builder.ToString();
+        }
+
+        public static string IncreaseSalaries(SoftUniContext context)
+        {
+
+            StringBuilder builder = new StringBuilder();
+
+            string[] departments = new[]
+            {
+                "Engineering",
+                "Tool Design",
+                "Marketing",
+                "Information Services"
+            };
+
+            var employeesToUpdate = context.Employees
+                .Where(x => departments.Contains(x.Department.Name))
+                .ToList();
+
+            foreach (var emp in employeesToUpdate.OrderBy(x => x.FirstName).ThenBy(x => x.LastName))
+            {
+                emp.Salary *= 1.12m;
+                builder.AppendLine($"{emp.FirstName} {emp.LastName} (${emp.Salary:F2})");
+            }
+
+            context.SaveChanges();
+
+
+            return builder.ToString();
+
+        }
+
+        public static string GetEmployeesByFirstNameStartingWithSa(SoftUniContext context)
+        {
+            StringBuilder builder = new StringBuilder();
+
+            context.Employees
+                .Where(x => EF.Functions.Like(x.FirstName, "sa%"))
+                .Select(x => new
+                {
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    JobTitle = x.JobTitle,
+                    Salary = x.Salary
+                })
+                .OrderBy(x => x.FirstName)
+                .ThenBy(x => x.LastName)
+                .ToList()
+                .ForEach(x =>
+                {
+                    builder.AppendLine($"{x.FirstName} {x.LastName} - {x.JobTitle} - (${x.Salary:F2})");
+                });
+
+            return builder.ToString();
+
+        }
+
+        public static string DeleteProjectById(SoftUniContext context)
+        {
+            StringBuilder builder = new StringBuilder();
+
+            var project = context.Projects
+                .FirstOrDefault(x => x.ProjectId == 2);
+
+
+            var empProjects = context.EmployeesProjects
+                .Where(x => x.ProjectId == project.ProjectId)
+                .ToList();
+
+            context.EmployeesProjects.RemoveRange(empProjects);
+
+            context.Projects.Remove(project);
+
+
+            context.Projects
+                .Select(x => new
+                {
+                    Name = x.Name
+                })
+                .Take(10)
+                .ToList()
+                .ForEach(x =>
+                {
+                    builder.AppendLine(x.Name)
+
+                });
+
+            context.SaveChanges();
+
+            return builder.ToString();
+
         }
     }
 }
