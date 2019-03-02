@@ -376,7 +376,6 @@ namespace SoftUni
         {
             StringBuilder builder = new StringBuilder();
 
-
             var empMod = context.Employees
                 .Where(x => x.Address.Town.Name == "Seattle")
                 .ToList();
