@@ -351,8 +351,9 @@ namespace SoftUni
 
             context.EmployeesProjects.RemoveRange(empProjects);
 
-            context.Projects.Remove(project);
+            context.SaveChanges();
 
+            context.Projects.Remove(project);
 
             context.Projects
                 .Select(x => new
@@ -366,10 +367,41 @@ namespace SoftUni
                     builder.AppendLine(x.Name);
                 });
 
-            context.SaveChanges();
 
             return builder.ToString();
 
+        }
+
+        public static string RemoveTown(SoftUniContext context)
+        {
+            StringBuilder builder = new StringBuilder();
+
+
+            var empMod = context.Employees
+                .Where(x => x.Address.Town.Name == "Seattle")
+                .ToList();
+
+            var addresses = context.Addresses
+                .Where(x => x.Town.Name == "Seattle")
+                .ToList();
+
+            var empAddresses = context.Employees
+                .Select(x => x.Address)
+                .ToList();
+
+            empMod.ForEach(x => x.AddressId = null);
+
+
+            builder.AppendLine($"{addresses.Count} addresses in Seattle were deleted");
+
+            addresses.ForEach(x => x.TownId = null);
+
+            var town = context.Towns.FirstOrDefault(x => x.Name == "Seattle");
+            context.Towns.Remove(town);
+
+            context.SaveChanges();
+
+            return builder.ToString();
         }
     }
 }
