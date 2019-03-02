@@ -1,14 +1,13 @@
-﻿using System.Globalization;
-using System.Security.Cryptography.X509Certificates;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.EntityFrameworkCore.SqlServer.Query.ExpressionTranslators.Internal;
-
-namespace SoftUni
+﻿namespace SoftUni
 {
+    using System;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
-    using System;
+
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.Internal;
+
     using SoftUni.Data;
     using SoftUni.Models;
 
@@ -21,9 +20,8 @@ namespace SoftUni
 
             using (SoftUniContext context = new SoftUniContext())
             {
-                string output = DeleteProjectById(context);
+                string output = RemoveTown(context);
                 Console.WriteLine(output);
-
             }
         }
 
