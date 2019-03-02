@@ -42,8 +42,10 @@ namespace SoftUni
                 })
                 .ToList()
                 .ForEach(
-                    x => builder.AppendLine($"{x.FirstName} {x.LastName} {x.MiddleName} {x.JobTitle} {x.Salary:F2}")
-                );
+                    x =>
+                    {
+                        builder.AppendLine($"{x.FirstName} {x.LastName} {x.MiddleName} {x.JobTitle} {x.Salary:F2}");
+                    });
 
             return builder.ToString();
         }
@@ -53,17 +55,20 @@ namespace SoftUni
             StringBuilder builder = new StringBuilder();
 
             context.Employees
-                .Where(x => x.Salary > 50_000)
-                .Select(x => new
-                {
-                    FirstName = x.FirstName,
-                    Salary = x.Salary
-                })
-                .OrderBy(x => x.FirstName)
-                .ToList()
-                .ForEach(
-                    x => builder.AppendLine($"{x.FirstName} - {x.Salary:F2}")
-                );
+               .Where(x => x.Salary > 50_000)
+               .Select(x => new
+               {
+                   FirstName = x.FirstName,
+                   Salary = x.Salary
+               })
+               .OrderBy(x => x.FirstName)
+               .ToList()
+               .ForEach(
+               x =>
+                   {
+                       builder.AppendLine($"{x.FirstName} - {x.Salary:F2}");
+                   }
+               );
 
             return builder.ToString();
         }
@@ -358,8 +363,7 @@ namespace SoftUni
                 .ToList()
                 .ForEach(x =>
                 {
-                    builder.AppendLine(x.Name)
-
+                    builder.AppendLine(x.Name);
                 });
 
             context.SaveChanges();
