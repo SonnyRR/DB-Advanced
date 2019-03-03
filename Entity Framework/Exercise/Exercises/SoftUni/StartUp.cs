@@ -17,7 +17,7 @@
         {
             // DB Scaffold powershell cmdlet:
             // Scaffold-DbContext -Connection "Server=DESKTOP-R3F6I64\SQLEXPRESS;Database=SoftUni;Integrated Security=True;" -Provider Microsoft.EntityFrameworkCore.SqlServer -OutputDir Data/Models
-            // Test chagne for commit.
+
             using (SoftUniContext context = new SoftUniContext())
             {
                 string output = RemoveTown(context);
