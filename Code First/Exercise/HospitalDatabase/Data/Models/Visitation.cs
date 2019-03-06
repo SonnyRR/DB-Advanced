@@ -9,8 +9,6 @@ namespace P01_HospitalDatabase.Data.Models
 
         public DateTime Date { get; set; }
 
-        public int MyProperty { get; set; }
-
         public string Comments { get; set; }
 
         public int PatientId { get; set; }

@@ -21,7 +21,6 @@ namespace P01_HospitalDatabase.Data.Models
 
         public string Address { get; set; }
 
-        [EmailAddress]
         public string Email { get; set; }
 
         public bool HasInsurance { get; set; }
