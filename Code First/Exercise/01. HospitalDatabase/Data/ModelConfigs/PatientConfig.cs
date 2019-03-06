@@ -12,6 +12,15 @@ namespace P01_HospitalDatabase.Data.ModelConfigs
         {
             builder.HasKey(x => x.PatientId);
 
+            builder.HasMany(x => x.Diagnoses)
+                .WithOne(x => x.Patient)
+                .HasForeignKey(x => x.PatientId);
+
+            builder.HasMany(x => x.Visitations)
+                .WithOne(x => x.Patient)
+                .HasForeignKey(x => x.PatientId);
+
+
             builder.Property(x => x.FirstName)
                 .HasMaxLength(50)
                 .IsUnicode(true)
