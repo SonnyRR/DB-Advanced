@@ -7,7 +7,6 @@ namespace P01_HospitalDatabase
     {
         public static void Main()
         {
-            HospitalContext context = new HospitalContext();
 
         }
     }

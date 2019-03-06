@@ -27,7 +27,7 @@ namespace P01_HospitalDatabase.Data
         {
             if (optionsBuilder.IsConfigured == false)
             {
-                optionsBuilder.UseSqlServer(@"Server=localhost,1433;Database=HospitalDB;User Id=sa;Password=EmanuelaTop1.;");
+                optionsBuilder.UseSqlServer(@"Server=DESKTOP-R3F6I64\SQLEXPRESS;Initial Catalog=HospitalDB;Integrated Security=true;");
             }
         }
 

@@ -20,7 +20,6 @@ namespace P01_HospitalDatabase.Data.ModelConfigs
                 .WithOne(x => x.Patient)
                 .HasForeignKey(x => x.PatientId);
 
-
             builder.Property(x => x.FirstName)
                 .HasMaxLength(50)
                 .IsUnicode(true)
