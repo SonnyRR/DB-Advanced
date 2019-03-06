@@ -1,8 +1,9 @@
-﻿namespace P01_HospitalDatabase.Data.ModelConfigs
+namespace P01_HospitalDatabase.Data.ModelConfigs
 {
     using Microsoft.EntityFrameworkCore;
-    using Data.Models;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+    using Data.Models;
 
     public class PatientConfig : IEntityTypeConfiguration<Patient>
     {
@@ -29,7 +30,7 @@
             builder.Property(x => x.Email)
             .HasMaxLength(80)
             .IsUnicode(false)
-            .IsRequired(true)
+            .IsRequired(true);
 
         }
     }

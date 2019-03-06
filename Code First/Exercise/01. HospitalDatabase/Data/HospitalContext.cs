@@ -2,7 +2,6 @@ namespace P01_HospitalDatabase.Data
 {
     using Microsoft.EntityFrameworkCore;
 
-    using Data.Models;
     using P01_HospitalDatabase.Data.ModelConfigs;
 
     public class HospitalContext : DbContext
@@ -31,7 +30,9 @@ namespace P01_HospitalDatabase.Data
         {
 
             builder.ApplyConfiguration(new PatientConfig());
-
+            builder.ApplyConfiguration(new VisitationConfig());
+            builder.ApplyConfiguration(new DiagnoseConfig());
+            builder.ApplyConfiguration(new MedicamentConfig());
         }
     }
 }

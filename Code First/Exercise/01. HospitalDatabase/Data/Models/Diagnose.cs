@@ -1,11 +1,8 @@
 namespace P01_HospitalDatabase.Data.Models
 {
 
-    using System.ComponentModel.DataAnnotations;
-
     public class Diagnose
     {
-        [Key]
         public int DiagnoseId { get; set; }
 
         public string Name { get; set; }
