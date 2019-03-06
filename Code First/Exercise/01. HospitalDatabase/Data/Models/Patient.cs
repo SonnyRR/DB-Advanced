@@ -1,4 +1,4 @@
-﻿namespace P01_HospitalDatabase.Data.Models
+namespace P01_HospitalDatabase.Data.Models
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -13,22 +13,14 @@
             this.Medicaments = new HashSet<Medicament>();
         }
 
-        [Key]
         public int PatientId { get; set; }
 
-        [MaxLength(50)]
-        [Required]
         public string FirstName { get; set; }
 
-        [MaxLength(50)]
-        [Required]
         public string LastName { get; set; }
 
-        [MaxLength(250)]
-        [Required]
         public string Address { get; set; }
 
-        [MaxLength(80)]
         [EmailAddress]
         public string Email { get; set; }
 

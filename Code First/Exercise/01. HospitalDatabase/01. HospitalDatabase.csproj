@@ -10,4 +10,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\ModelConfigs\" />
+  </ItemGroup>
 </Project>
