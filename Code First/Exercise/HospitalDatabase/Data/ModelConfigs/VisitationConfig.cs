@@ -15,6 +15,10 @@
                 .WithMany(x => x.Visitations)
                 .HasForeignKey(x => x.PatientId);
 
+            builder.HasOne(x => x.Doctor)
+                .WithMany(x => x.Visitations)
+                .HasForeignKey(x => x.DoctorId);
+
             builder.Property(x => x.Comments)
                 .HasMaxLength(250)
                 .IsRequired(true);
