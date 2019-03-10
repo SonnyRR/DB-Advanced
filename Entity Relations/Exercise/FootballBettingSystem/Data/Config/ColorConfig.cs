@@ -11,13 +11,15 @@
         {
             builder.HasKey(x => x.ColorId);
 
-            builder.HasMany(x => x.Teams)
+            builder.HasMany(x => x.PrimaryKitTeams)
                 .WithOne(x => x.PrimaryKitColor)
-                .HasForeignKey(x => x.PrimaryKitColorId);
+                .HasForeignKey(x => x.PrimaryKitColorId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasMany(x => x.Teams)
+            builder.HasMany(x => x.SecondaryKitTeams)
                 .WithOne(x => x.SecondaryKitColor)
-                .HasForeignKey(x => x.SecondaryKitColorId);
+                .HasForeignKey(x => x.SecondaryKitColorId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.Property(x => x.Name)
                 .HasMaxLength(15)

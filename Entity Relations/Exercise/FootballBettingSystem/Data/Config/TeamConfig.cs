@@ -12,12 +12,14 @@
             builder.HasKey(x => x.TeamId);
 
             builder.HasOne(x => x.PrimaryKitColor)
-                .WithMany(x => x.Teams)
-                .HasForeignKey(x => x.PrimaryKitColorId);
+                .WithMany(x => x.PrimaryKitTeams)
+                .HasForeignKey(x => x.PrimaryKitColorId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.SecondaryKitColor)
-                .WithMany(x => x.Teams)
-                .HasForeignKey(x => x.SecondaryKitColorId);
+                .WithMany(x => x.SecondaryKitTeams)
+                .HasForeignKey(x => x.SecondaryKitColorId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(x => x.Town)
                 .WithMany(x => x.Teams)
@@ -28,7 +30,8 @@
                 .IsRequired(true);
 
             builder.Property(x => x.Initials)
-                .HasColumnType("CHAR(3)");
+                .HasColumnType("CHAR(3)")
+                .IsRequired(true);
 
         }
     }
