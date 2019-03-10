@@ -6,6 +6,7 @@
         public Player Player { get; set; }
 
         public int GameId { get; set; }
+        public Game Game { get; set; }
 
         public int ScoredGoals { get; set; }
 
