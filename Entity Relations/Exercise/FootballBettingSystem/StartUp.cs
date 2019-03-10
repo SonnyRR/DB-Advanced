@@ -6,11 +6,6 @@
     {
         static void Main()
         {
-            Console.WriteLine();            
-        }
-
-        public static void TestMethod()
-        {
 
         }
     }
