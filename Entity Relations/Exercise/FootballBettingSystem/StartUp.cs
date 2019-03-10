@@ -6,7 +6,12 @@
     {
         static void Main()
         {
-            testcommit
+            Console.WriteLine();            
+        }
+
+        public static void TestMethod()
+        {
+
         }
     }
 }
