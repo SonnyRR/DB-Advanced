@@ -32,7 +32,7 @@
         {
             if (optionsBuilder.IsConfigured == false)
             {
-                optionsBuilder.UseSqlServer(@"Server=DESKTOP-R3F6I64\SQLEXPRESS;Database=FootballBettingSystem;Integrated Security=True;");
+                optionsBuilder.UseSqlServer("INSERT YOUR OWN CONN STRING");
             }
         }
 
