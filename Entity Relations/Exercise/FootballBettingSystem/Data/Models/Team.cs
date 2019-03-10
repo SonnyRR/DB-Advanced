@@ -1,11 +1,14 @@
 ﻿namespace P03_FootballBetting.Data.Models
 {
     using System;
+    using System.Collections.Generic;
 
     public class Team
     {
         public Team()
         {
+            this.HomeGames = new HashSet<Game>();
+            this.AwayGames = new HashSet<Game>();
         }
 
         public int TeamId { get; set; }
@@ -23,6 +26,9 @@
 
         public int SecondaryKitColorId { get; set; }
         public Color SecondaryKitColor { get; set; }
+
+        public ICollection<Game> HomeGames { get; set; }
+        public ICollection<Game> AwayGames { get; set; }
 
 
         public int TownId { get; set; }
