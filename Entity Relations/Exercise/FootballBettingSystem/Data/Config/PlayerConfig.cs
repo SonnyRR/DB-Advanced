@@ -20,6 +20,10 @@
                 .WithMany(x => x.Players)
                 .HasForeignKey(x => x.TeamId);
 
+            builder.HasMany(x => x.PlayerStatistics)
+                .WithOne(x => x.Player)
+                .HasForeignKey(x => x.PlayerId);
+
             builder.Property(x => x.Name)
                 .HasMaxLength(50)
                 .IsRequired(true);

@@ -33,6 +33,6 @@
         public DateTime DateTime { get; set; }
 
         public ICollection<Bet> Bets { get; set; }
-
+        public ICollection<PlayerStatistic> PlayerStatistics { get; set; }
     }
 }

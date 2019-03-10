@@ -10,7 +10,7 @@ using P03_FootballBetting.Data;
 namespace P03_FootballBetting.Migrations
 {
     [DbContext(typeof(FootballBettingContext))]
-    [Migration("20190310204807_InitialMigration")]
+    [Migration("20190310212026_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -288,12 +288,12 @@ namespace P03_FootballBetting.Migrations
             modelBuilder.Entity("P03_FootballBetting.Data.Models.PlayerStatistic", b =>
                 {
                     b.HasOne("P03_FootballBetting.Data.Models.Game", "Game")
-                        .WithMany()
+                        .WithMany("PlayerStatistics")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("P03_FootballBetting.Data.Models.Player", "Player")
-                        .WithMany()
+                        .WithMany("PlayerStatistics")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

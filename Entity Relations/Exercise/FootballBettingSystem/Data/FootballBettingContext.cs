@@ -32,7 +32,7 @@
         {
             if (optionsBuilder.IsConfigured == false)
             {
-                optionsBuilder.UseSqlServer(@"Server=localhost,1433;Database=FootballBettingSystem;User Id=sa;Password=EmanuelaTop1.;");
+                optionsBuilder.UseSqlServer(@"Server=DESKTOP-R3F6I64\SQLEXPRESS;Database=FootballBettingSystem;Integrated Security=True;");
             }
         }
 

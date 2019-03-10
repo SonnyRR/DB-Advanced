@@ -1,6 +1,8 @@
 ﻿namespace P03_FootballBetting.Data.Models
 {
 
+    using System.Collections.Generic;
+
     public class Player
     {
 
@@ -17,5 +19,7 @@
         public Position Position { get; set; }
 
         public bool IsInjured { get; set; }
+
+        public ICollection<PlayerStatistic> PlayerStatistics { get; set; }
     }
 }

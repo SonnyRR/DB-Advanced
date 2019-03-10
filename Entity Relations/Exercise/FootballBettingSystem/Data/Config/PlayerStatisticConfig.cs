@@ -11,6 +11,13 @@
         {
             builder.HasKey(x => new { x.PlayerId, x.GameId });
 
+            builder.HasOne(x => x.Game)
+                .WithMany(x => x.PlayerStatistics)
+                .HasForeignKey(x => x.GameId);
+
+            builder.HasOne(x => x.Player)
+                .WithMany(x => x.PlayerStatistics)
+                .HasForeignKey(x => x.PlayerId);
 
         }
     }

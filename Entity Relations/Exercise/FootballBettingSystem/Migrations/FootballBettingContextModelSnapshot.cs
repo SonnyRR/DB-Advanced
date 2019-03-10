@@ -286,12 +286,12 @@ namespace P03_FootballBetting.Migrations
             modelBuilder.Entity("P03_FootballBetting.Data.Models.PlayerStatistic", b =>
                 {
                     b.HasOne("P03_FootballBetting.Data.Models.Game", "Game")
-                        .WithMany()
+                        .WithMany("PlayerStatistics")
                         .HasForeignKey("GameId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("P03_FootballBetting.Data.Models.Player", "Player")
-                        .WithMany()
+                        .WithMany("PlayerStatistics")
                         .HasForeignKey("PlayerId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
