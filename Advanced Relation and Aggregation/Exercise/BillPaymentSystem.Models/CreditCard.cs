@@ -22,5 +22,9 @@
         {
             get { return LimitLeft - MoneyOwed; }
         }
+
+
+        public int PaymentMethodId { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿namespace BillPaymentSystem.Data
 {
     using Microsoft.EntityFrameworkCore;
+    using Data.EntityConfigurations;
 
     public class BillPaymentSystemContext : DbContext
     {
@@ -24,7 +25,8 @@
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
+            modelBuilder.ApplyConfiguration(new UserConfiguration());   
+            modelBuilder.ApplyConfiguration(new BankAccountConfiguration());   
         }
     }
 }
