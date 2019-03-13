@@ -13,8 +13,6 @@
 
         public string SWIFT { get; set; }
 
-        public int PaymentMethodId { get; set; }    
         public PaymentMethod PaymentMethod { get; set; }
-
     }
 }

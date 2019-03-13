@@ -28,7 +28,8 @@
 
             builder.Property(x => x.Password)
                 .HasMaxLength(25)
-                .IsUnicode(false);
+                .IsUnicode(false)
+                .IsRequired();
         }
     }
 }
