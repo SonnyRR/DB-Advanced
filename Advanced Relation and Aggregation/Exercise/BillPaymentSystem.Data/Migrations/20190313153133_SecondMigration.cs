@@ -2,7 +2,7 @@
 
 namespace BillPaymentSystem.Data.Migrations
 {
-    public partial class FixedMigration : Migration
+    public partial class SecondMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -36,6 +36,13 @@ namespace BillPaymentSystem.Data.Migrations
                 oldClrType: typeof(string),
                 oldMaxLength: 50,
                 oldNullable: true);
+
+            migrationBuilder.AlterColumn<decimal>(
+                name: "Balance",
+                table: "BankAccounts",
+                type: "DECIMAL(15,4)",
+                nullable: false,
+                oldClrType: typeof(decimal));
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -67,6 +74,13 @@ namespace BillPaymentSystem.Data.Migrations
                 nullable: true,
                 oldClrType: typeof(string),
                 oldMaxLength: 50);
+
+            migrationBuilder.AlterColumn<decimal>(
+                name: "Balance",
+                table: "BankAccounts",
+                nullable: false,
+                oldClrType: typeof(decimal),
+                oldType: "DECIMAL(15,4)");
         }
     }
 }

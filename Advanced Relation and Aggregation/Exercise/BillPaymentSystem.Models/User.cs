@@ -22,6 +22,7 @@
 
         public string LastName { get; set; }
 
+        [MinLength(8), MaxLength(25)]
         public string Password { get; set; }
 
         public ICollection<PaymentMethod> PaymentMethods { get; set; }

@@ -1,8 +1,8 @@
 ﻿namespace BillPaymentSystem.Models
 {
+    using BillPaymentSystem.Models.Attributes;
     using System;
     using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
 
     public class CreditCard
     {
@@ -10,12 +10,13 @@
         [Key]
         public int CreditCardId { get; set; }
 
+        [Expiration]
         public DateTime ExpirationDate { get; set; }
-
-        [Column(TypeName = "DECIMAL(15,4)")]
+       
+        [Range(typeof(decimal), "0.01", "79228162514264337593543950335")]
         public decimal Limit { get; set; }
 
-        [Column(TypeName = "DECIMAL(15,4)")]
+        [Range(typeof(decimal), "0.01", "79228162514264337593543950335")]
         public decimal MoneyOwed { get; set; }
 
         public decimal LimitLeft
