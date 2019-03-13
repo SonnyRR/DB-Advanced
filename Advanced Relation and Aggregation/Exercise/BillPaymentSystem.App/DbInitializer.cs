@@ -70,11 +70,17 @@
             }
         }
 
-        public static void CreditCardSeed(BillPaymentSystemContext context)
+        public static void CreditCardSeed(BillPaymentSystemContext context, Random rng)
         {
             using (context)
             {
-
+                for (int i = 0; i < 8; i++)
+                { 
+                    CreditCard creditCard = new CreditCard();
+                    creditCard.ExpirationDate = DateTime.Now;
+                    creditCard.Limit = (decimal)rng.NextDouble() * 100M;
+                    creditCard.MoneyOwed = (decimal)rng.NextDouble() * 10;
+                }
             }
         }
 
