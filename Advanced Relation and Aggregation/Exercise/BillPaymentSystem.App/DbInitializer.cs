@@ -25,9 +25,9 @@
             using (this._context)
             {
 
-                //SeedUsers(this._context);
-                //SeedCreditCards(this._context, this._rng);
-                //SeedBankAccounts(this._context, this._rng);
+                SeedUsers(this._context);
+                SeedCreditCards(this._context, this._rng);
+                SeedBankAccounts(this._context, this._rng);
                 SeedPaymentMethods(this._context, this._rng);
 
             }
