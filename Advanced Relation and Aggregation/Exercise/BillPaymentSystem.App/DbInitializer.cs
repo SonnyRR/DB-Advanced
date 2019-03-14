@@ -31,23 +31,59 @@
 
                 string[] firstNames = new[]
                 {
-                "Lilly", "Mirela", "Antonia", "Cvetan", "Pesho", "Gosho", null, "", "Vyara", "Maria"
-            };
+                    "Lilly",
+                    "Mirela",
+                    "Antonia",
+                    "Cvetan",
+                    "Pesho",
+                    "Gosho",
+                    null,
+                    "",
+                    "Vyara",
+                    "Maria"
+                };
 
                 string[] secondNames = new[]
                 {
-                "Alexandrova", "Dimova", "Elenova", "Dimitrov", "Petkov", "Goshov", "", "Dobromirova", "Atanasova", "Blagova"
-            };
+                    "Alexandrova",
+                    "Dimova",
+                    "Elenova",
+                    "Dimitrov",
+                    "Petkov",
+                    "Goshov",
+                    "",
+                    "Dobromirova",
+                    "Atanasova",
+                    "Blagova"
+                };
 
                 string[] emails = new[]
                 {
-                "Alexandrova@abv.bg", "Dimova@abv.bg", "Elenova@abv.bg", "Dimitrov@abv.bg", "Petkov@abv.bg", "Goshov@abv.bg", "", "Dobromirova@abv.bg", "Atanasova@abv.bg", "Blagova@abv.bg"
-            };
+                    "Alexandrova@abv.bg",
+                    "Dimova@abv.bg",
+                    "Elenova@abv.bg",
+                    "Dimitrov@abv.bg",
+                    "Petkov@abv.bg",
+                    "Goshov@abv.bg",
+                    "",
+                    "Dobromirova@abv.bg",
+                    "Atanasova@abv.bg",
+                    "Blagova@abv.bg"
+                };
 
                 string[] passwords = new[]
                 {
-                "123456789", "asdasdas", "eeeeeeee", "12233444556", "wwwwwwawd3#d", "123456789", "123456789", "123", "12345678"
-            };
+                    "123456789",
+                    "asdasdas",
+                    "eeeeeeee",
+                    "12233444556",
+                    "wwwwwwawd3#d",
+                    "123456789",
+                    "123456789",
+                    "123",
+                    "12345678",
+                    "idkdkdkdk"
+                };
 
                 for (int i = 0; i < firstNames.Length; i++)
                 {
@@ -74,13 +110,24 @@
         {
             using (context)
             {
+                ICollection<CreditCard> cards = new List<CreditCard>();
+
                 for (int i = 0; i < 8; i++)
-                { 
+                {
                     CreditCard creditCard = new CreditCard();
                     creditCard.ExpirationDate = DateTime.Now;
                     creditCard.Limit = (decimal)rng.NextDouble() * 100M;
                     creditCard.MoneyOwed = (decimal)rng.NextDouble() * 10;
+
+                    if (!IsValid(creditCard))
+                    {
+                        continue;
+                    }
+
+                    cards.Add(creditCard);
                 }
+
+
             }
         }
 

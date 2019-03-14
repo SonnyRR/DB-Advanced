@@ -16,13 +16,14 @@
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
+            ValidationResult result = ValidationResult.Success;
+
             object desiredPropertyValue = validationContext
                .ObjectType
                .GetProperty(_targetProperty, BindingFlags.Instance | BindingFlags.Public)
                .GetValue(validationContext.ObjectInstance);
 
-            if (value == null && desiredPropertyValue == null
-                || value!=null && desiredPropertyValue != null)
+            if (!((value == null) ^ (desiredPropertyValue == null)))
             {
                 return new ValidationResult("The two properties must have opposite values!");
             }
