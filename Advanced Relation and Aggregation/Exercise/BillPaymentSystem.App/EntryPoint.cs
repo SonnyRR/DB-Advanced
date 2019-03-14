@@ -2,11 +2,18 @@
 {
     using System;
 
+    using BillPaymentSystem.Data;
+
     public class EntryPoint
     {
         public static void Main()
         {
-            Console.WriteLine("Hello World!");
+
+            BillPaymentSystemContext context = new BillPaymentSystemContext();
+
+            DbInitializer initializer = new DbInitializer(context);
+            initializer.Seed();
+            ;
         }
     }
 }

@@ -9,7 +9,7 @@
 
         public PaymentType Type { get; set; }
 
-        public int? UserId { get; set; }
+        public int UserId { get; set; }
         public User User { get; set; }
 
         [Xor(nameof(CreditCardId))]
