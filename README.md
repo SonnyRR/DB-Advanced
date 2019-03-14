@@ -10,6 +10,7 @@
     <li>Code First</li>
     <li>Entity Relations</li>
     <li>Advanced Relations and Aggregation</li>
+    <li>Advanced Querying</li>
     <li><i>TODO...</i>
 </ol>
 
