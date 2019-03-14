@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BillPaymentSystem.Data.Migrations
 {
     [DbContext(typeof(BillPaymentSystemContext))]
-    [Migration("20190313160307_ThirdMigration")]
-    partial class ThirdMigration
+    [Migration("20190314075510_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,8 +27,7 @@ namespace BillPaymentSystem.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<decimal>("Balance")
-                        .HasColumnType("DECIMAL(15,4)");
+                    b.Property<decimal>("Balance");
 
                     b.Property<string>("BankName")
                         .IsRequired()
@@ -52,11 +51,9 @@ namespace BillPaymentSystem.Data.Migrations
 
                     b.Property<DateTime>("ExpirationDate");
 
-                    b.Property<decimal>("Limit")
-                        .HasColumnType("DECIMAL(15,4)");
+                    b.Property<decimal>("Limit");
 
-                    b.Property<decimal>("MoneyOwed")
-                        .HasColumnType("DECIMAL(15,4)");
+                    b.Property<decimal>("MoneyOwed");
 
                     b.HasKey("CreditCardId");
 

@@ -25,8 +25,7 @@ namespace BillPaymentSystem.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<decimal>("Balance")
-                        .HasColumnType("DECIMAL(15,4)");
+                    b.Property<decimal>("Balance");
 
                     b.Property<string>("BankName")
                         .IsRequired()
@@ -50,11 +49,9 @@ namespace BillPaymentSystem.Data.Migrations
 
                     b.Property<DateTime>("ExpirationDate");
 
-                    b.Property<decimal>("Limit")
-                        .HasColumnType("DECIMAL(15,4)");
+                    b.Property<decimal>("Limit");
 
-                    b.Property<decimal>("MoneyOwed")
-                        .HasColumnType("DECIMAL(15,4)");
+                    b.Property<decimal>("MoneyOwed");
 
                     b.HasKey("CreditCardId");
 
