@@ -14,9 +14,9 @@
         {
             using (var db = new BookShopContext())
             {
-                //DbInitializer.ResetDatabase(db);
+                DbInitializer.ResetDatabase(db);
 
-                Console.WriteLine(GetMostRecentBooks(db));
+                Console.WriteLine(RemoveBooks(db));
             }
         }
 
@@ -207,6 +207,28 @@
             }
 
             return builder.ToString();
+        }
+
+        public static void IncreasePrices(BookShopContext context)
+        {
+            var books = context.Books
+                .Where(b => b.ReleaseDate.Value.Year < 2010)
+                .ToList();
+
+            books.ForEach(b => b.Price += 5);
+
+            context.SaveChanges();
+        }
+
+        public static int RemoveBooks(BookShopContext context)
+        {
+            var books = context.Books
+                .Where(b => b.Copies < 4200)
+                .ToList();
+
+            context.Books.RemoveRange(books);
+
+            return context.SaveChanges();
         }
     }
 }
