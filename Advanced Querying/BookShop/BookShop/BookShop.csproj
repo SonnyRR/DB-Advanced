@@ -11,4 +11,7 @@
     <ProjectReference Include="..\BookShop.Models\BookShop.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove=".DS_Store" />
+  </ItemGroup>
 </Project>

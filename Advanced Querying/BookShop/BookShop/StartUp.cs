@@ -228,7 +228,9 @@
 
             context.Books.RemoveRange(books);
 
-            return context.SaveChanges();
+            context.SaveChanges();
+
+            return books.Count;
         }
     }
 }
