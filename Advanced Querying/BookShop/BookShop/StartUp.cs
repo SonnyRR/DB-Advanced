@@ -15,6 +15,7 @@
             using (var db = new BookShopContext())
             {
                 //DbInitializer.ResetDatabase(db);
+
                 Console.WriteLine(GetMostRecentBooks(db));
             }
         }
