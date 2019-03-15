@@ -9,11 +9,10 @@
         public static void Main()
         {
 
-            BillPaymentSystemContext context = new BillPaymentSystemContext();
+            //BillPaymentSystemContext context = new BillPaymentSystemContext();
 
-            DbInitializer initializer = new DbInitializer(context);
-            initializer.Seed();
-            ;
+            //DbInitializer initializer = new DbInitializer(context);
+            //initializer.Seed();            
         }
     }
 }
