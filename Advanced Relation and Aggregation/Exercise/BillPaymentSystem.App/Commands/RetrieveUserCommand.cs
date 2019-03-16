@@ -25,9 +25,7 @@
                 if (!string.IsNullOrWhiteSpace(value))
                     this._firstName = value;
                 else
-                    throw new ArgumentException("Invalid name!");
-
-                
+                    throw new ArgumentException("Invalid name!");                
             }
         }
 
@@ -46,6 +44,7 @@
         public bool Execute()
         {
             bool hasExecutedSuccessfully = true;
+
 
 
 

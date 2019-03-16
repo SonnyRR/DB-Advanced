@@ -14,9 +14,9 @@
         {
             using (var db = new BookShopContext())
             {
-                DbInitializer.ResetDatabase(db);
+              //DbInitializer.ResetDatabase(db);
 
-                Console.WriteLine(RemoveBooks(db));
+                Console.WriteLine(GetBooksByAuthor(db, "R"));
             }
         }
 
@@ -54,7 +54,7 @@
             return string.Join(Environment.NewLine, books);
         }
 
-        public static string GetBooksNotRealeasedIn(BookShopContext context, int year)
+        public static string GetBooksNotReleasedIn(BookShopContext context, int year)
         {
             var books = context.Books
                 .Where(x => x.ReleaseDate.Value.Year != year)
@@ -117,8 +117,10 @@
 
         public static string GetBooksByAuthor(BookShopContext context, string input)
         {
-            var books = context.Books
-                .Where(x => EF.Functions.Like(x.Author.LastName, $"{input}%"))
+            var books = context
+                .Books
+                .Include(x => x.Author)
+                .Where(x => x.Author.LastName.StartsWith(input, StringComparison.InvariantCultureIgnoreCase))
                 .OrderBy(x => x.BookId)
                 .Select(x => $"{x.Title} ({x.Author.FirstName} {x.Author.LastName})")
                 .ToList();
