@@ -14,9 +14,9 @@
         {
             using (var db = new BookShopContext())
             {
-              //DbInitializer.ResetDatabase(db);
+                DbInitializer.ResetDatabase(db);
 
-                Console.WriteLine(GetBooksByAuthor(db, "R"));
+                Console.WriteLine(RemoveBooks(db));
             }
         }
 
@@ -230,9 +230,9 @@
 
             context.Books.RemoveRange(books);
 
-            context.SaveChanges();
+            int count = context.SaveChanges();
 
-            return books.Count;
+            return count;
         }
     }
 }

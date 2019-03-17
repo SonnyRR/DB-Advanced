@@ -1,4 +1,4 @@
-﻿namespace BillPaymentSystem.App.Engine.Contracts
+﻿namespace BillPaymentSystem.App.Core.Contracts
 {
     public interface IEngine
     {

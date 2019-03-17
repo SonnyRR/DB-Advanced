@@ -31,6 +31,8 @@ namespace BillPaymentSystem.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
+                    b.Property<int>("PaymentMethodId");
+
                     b.Property<string>("SWIFT")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -52,6 +54,8 @@ namespace BillPaymentSystem.Data.Migrations
                     b.Property<decimal>("Limit");
 
                     b.Property<decimal>("MoneyOwed");
+
+                    b.Property<int>("PaymentMethodId");
 
                     b.HasKey("CreditCardId");
 

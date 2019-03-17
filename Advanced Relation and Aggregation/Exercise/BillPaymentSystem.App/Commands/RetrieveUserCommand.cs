@@ -1,54 +1,67 @@
 ﻿namespace BillPaymentSystem.App.Commands
 {
-    using System;
+    using System.Text;
+    using System.Linq;
+    using Microsoft.EntityFrameworkCore;
 
     using Commands.Contracts;
+    using BillPaymentSystem.Models.Enums;
+    using BillPaymentSystem.Data;
 
     public class RetrieveUserCommand : ICommand
     {
 
-        private string _firstName;
-        private string _lastName;
-
-
-        public RetrieveUserCommand(string firstName, string lastName)
+        public string Execute(string[] args, BillPaymentSystemContext context)
         {
-            this.FirstName = firstName;
-            this.LastName = lastName;
-        }
+            StringBuilder builder = new StringBuilder();
 
-        public string FirstName
-        {
-            get { return this._firstName; }
-            set
+            int desiredId = int.Parse(args[0]);
+
+            var user = context
+                .Users
+                .Include(x => x.PaymentMethods)
+                .FirstOrDefault(x => x.UserId == desiredId);
+
+            if (user != null)
             {
-                if (!string.IsNullOrWhiteSpace(value))
-                    this._firstName = value;
-                else
-                    throw new ArgumentException("Invalid name!");                
-            }
-        }
+                builder.AppendLine($"User {user.FirstName} {user.LastName}");
+                builder.AppendLine($"Bank Accounts:");
 
-        public string LastName
-        {
-            get { return this._lastName; }
-            set
+                var bankAccs = user.PaymentMethods
+                    .Where(x => x.Type == PaymentType.BankAccount)
+                    .ToList();
+
+                bankAccs.ForEach(x =>
+                {
+                    builder.AppendLine($"-- ID: {x.BankAccountId}");
+                    builder.AppendLine($"--- Balance: {x.BankAccount.Balance:F2}");
+                    builder.AppendLine($"--- Bank: {x.BankAccount.BankName}");
+                    builder.AppendLine($"--- SWIFT: {x.BankAccount.SWIFT}");
+                });
+
+                builder.AppendLine($"Credit Cards:");
+
+                var cards = user.PaymentMethods
+                    .Where(x => x.Type == PaymentType.CreditCard)
+                    .ToList();
+
+                cards.ForEach(x =>
+                    {
+                        builder.AppendLine($"-- ID: {x.CreditCardId}");
+                        builder.AppendLine($"--- Limit: {x.CreditCard.Limit:F2}");
+                        builder.AppendLine($"--- Money Owed: {x.CreditCard.MoneyOwed:F2}");
+                        builder.AppendLine($"--- Limit Left: {x.CreditCard.LimitLeft:F2}");
+                        builder.AppendLine($"--- Expiration Date: {x.CreditCard.ExpirationDate.ToString("yyyy/MM")}");
+                    });
+            }
+
+            else
             {
-                if (!string.IsNullOrWhiteSpace(value))
-                    this._lastName = value;
-                else
-                    throw new ArgumentException("Invalid name!");
+                builder.AppendLine($"User with id: {desiredId} not found!");
             }
-        }
 
-        public bool Execute()
-        {
-            bool hasExecutedSuccessfully = true;
+            return builder.ToString();
 
-
-
-
-            return hasExecutedSuccessfully;
         }
     }
 }

@@ -17,6 +17,6 @@
         public BankAccount BankAccount { get; set; }
 
         public int? CreditCardId { get; set; }
-        public  CreditCard CreditCard { get; set; }
+        public CreditCard CreditCard { get; set; }
     }
 }

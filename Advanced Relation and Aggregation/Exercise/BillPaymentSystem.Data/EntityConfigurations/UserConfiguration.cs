@@ -10,6 +10,10 @@
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
+            builder.HasMany(x => x.PaymentMethods)
+                .WithOne(x => x.User)
+                .HasForeignKey(x => x.UserId);
+
             builder.Property(x => x.FirstName)
                 .HasMaxLength(50)
                 .IsRequired();

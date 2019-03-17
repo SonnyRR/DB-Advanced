@@ -33,6 +33,7 @@
         {
             modelBuilder.ApplyConfiguration(new UserConfiguration());   
             modelBuilder.ApplyConfiguration(new BankAccountConfiguration());   
+            modelBuilder.ApplyConfiguration(new PaymentMethodConfig());   
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿namespace BillPaymentSystem.App
 {
     using System;
-
+    using Microsoft.EntityFrameworkCore;
+    using System.Linq;
+    using BillPaymentSystem.App.Core;
     using BillPaymentSystem.Data;
 
     public class EntryPoint
@@ -9,10 +11,18 @@
         public static void Main()
         {
 
-            //BillPaymentSystemContext context = new BillPaymentSystemContext();
+            using (BillPaymentSystemContext context = new BillPaymentSystemContext())
+            {
+                //DbInitializer initializer = new DbInitializer(context);
+                //context.Database.EnsureCreated();
+                //initializer.Seed();               
 
-            //DbInitializer initializer = new DbInitializer(context);
-            //initializer.Seed();            
+                var methods = context.PaymentMethods.ToList();
+                ;
+            }
+
+            var engine = new Engine();
+            engine.Run();
         }
     }
 }
