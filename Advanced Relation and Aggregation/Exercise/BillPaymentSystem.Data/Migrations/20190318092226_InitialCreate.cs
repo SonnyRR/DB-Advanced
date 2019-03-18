@@ -16,7 +16,8 @@ namespace BillPaymentSystem.Data.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Balance = table.Column<decimal>(nullable: false),
                     BankName = table.Column<string>(maxLength: 50, nullable: false),
-                    SWIFT = table.Column<string>(unicode: false, maxLength: 20, nullable: false)
+                    SWIFT = table.Column<string>(unicode: false, maxLength: 20, nullable: false),
+                    PaymentMethodId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -31,7 +32,8 @@ namespace BillPaymentSystem.Data.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     ExpirationDate = table.Column<DateTime>(nullable: false),
                     Limit = table.Column<decimal>(nullable: false),
-                    MoneyOwed = table.Column<decimal>(nullable: false)
+                    MoneyOwed = table.Column<decimal>(nullable: false),
+                    PaymentMethodId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

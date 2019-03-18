@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BillPaymentSystem.Data.Migrations
 {
     [DbContext(typeof(BillPaymentSystemContext))]
-    [Migration("20190317120607_InitialCreate")]
+    [Migration("20190318092226_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,6 +33,8 @@ namespace BillPaymentSystem.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
+                    b.Property<int>("PaymentMethodId");
+
                     b.Property<string>("SWIFT")
                         .IsRequired()
                         .HasMaxLength(20)
@@ -54,6 +56,8 @@ namespace BillPaymentSystem.Data.Migrations
                     b.Property<decimal>("Limit");
 
                     b.Property<decimal>("MoneyOwed");
+
+                    b.Property<int>("PaymentMethodId");
 
                     b.HasKey("CreditCardId");
 
