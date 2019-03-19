@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     public class Employee
     {
@@ -48,6 +49,6 @@
 
         public DateTime? BirthDay { get; set; }
 
-        public string Address { get; set; }
+        public string Address { get; set; }        
     }
 }

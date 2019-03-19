@@ -58,6 +58,7 @@
                         var destinationCollection = sourceValue;
                         property.SetMethod.Invoke(dest, new[] { destinationCollection });
                     }
+
                     else
                     {
                         var destCollection = property.GetMethod.Invoke(dest, new object[0]);
@@ -69,19 +70,21 @@
                         }
                     }
                 }
+
                 else if (ReflectionUtils.IsNonGenericCollection(sourceValue.GetType()))
                 {
-                    var destColl = (IList)Activator.CreateInstance(property.PropertyType,
+                    var destCollection = (IList)Activator.CreateInstance(property.PropertyType,
                         new object[] { ((object[])sourceValue).Length });
 
                     for (int i = 0; i < ((object[])sourceValue).Length; i++)
                     {
-                        destColl[i] = this.DoMapping(((object[])sourceValue)[i],
+                        destCollection[i] = this.DoMapping(((object[])sourceValue)[i],
                             property.PropertyType.GetElementType());
                     }
 
-                    property.SetValue(dest, destColl);
+                    property.SetValue(dest, destCollection);
                 }
+
                 else
                 {
                     var propertyInstance = Activator.CreateInstance(srcProperty.GetValue(source).GetType());

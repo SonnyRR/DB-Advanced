@@ -24,6 +24,18 @@ namespace EmployeesMapping.Data.Migrations
                 {
                     table.PrimaryKey("PK_Employees", x => x.Id);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Employees",
+                columns: new[] { "Id", "Address", "BirthDay", "FirstName", "LastName", "Salary" },
+                values: new object[,]
+                {
+                    { 1, null, null, "Georgi", "Georgiev", 12131.44m },
+                    { 2, "Neznam", new DateTime(2019, 3, 4, 16, 6, 30, 351, DateTimeKind.Local).AddTicks(1308), "Maria", "Marieva", 999.10m },
+                    { 3, null, null, "Alisia", "Alisieva", 11111.11m },
+                    { 4, "Neznam2", null, "Pesho", "Peshov", 431.44m },
+                    { 5, null, new DateTime(2018, 3, 19, 16, 6, 30, 353, DateTimeKind.Local).AddTicks(4074), "Vyara", "Marinova", 2000.44m }
+                });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

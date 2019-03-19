@@ -8,6 +8,6 @@
 
         public string LastName { get; set; }
 
-        public decimal Salary { get; set; }
+        public decimal Salary { get; set; }        
     }
 }

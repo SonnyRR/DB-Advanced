@@ -9,7 +9,7 @@
     public class EntryPoint
     {
         public static void Main()
-        {
+        {           
             using (EmployeesMappingContext db = new EmployeesMappingContext())
             {
                 var employees = db.Employees

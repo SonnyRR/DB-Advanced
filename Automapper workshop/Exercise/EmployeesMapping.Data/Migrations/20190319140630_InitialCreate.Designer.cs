@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EmployeesMapping.Data.Migrations
 {
     [DbContext(typeof(EmployeesMappingContext))]
-    [Migration("20190319123908_SecondMigration")]
-    partial class SecondMigration
+    [Migration("20190319140630_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -54,6 +54,8 @@ namespace EmployeesMapping.Data.Migrations
                         new
                         {
                             Id = 2,
+                            Address = "Neznam",
+                            BirthDay = new DateTime(2019, 3, 4, 16, 6, 30, 351, DateTimeKind.Local).AddTicks(1308),
                             FirstName = "Maria",
                             LastName = "Marieva",
                             Salary = 999.10m
@@ -68,6 +70,7 @@ namespace EmployeesMapping.Data.Migrations
                         new
                         {
                             Id = 4,
+                            Address = "Neznam2",
                             FirstName = "Pesho",
                             LastName = "Peshov",
                             Salary = 431.44m
@@ -75,6 +78,7 @@ namespace EmployeesMapping.Data.Migrations
                         new
                         {
                             Id = 5,
+                            BirthDay = new DateTime(2018, 3, 19, 16, 6, 30, 353, DateTimeKind.Local).AddTicks(4074),
                             FirstName = "Vyara",
                             LastName = "Marinova",
                             Salary = 2000.44m

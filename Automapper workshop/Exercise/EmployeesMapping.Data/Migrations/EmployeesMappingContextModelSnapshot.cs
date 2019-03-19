@@ -53,7 +53,7 @@ namespace EmployeesMapping.Data.Migrations
                         {
                             Id = 2,
                             Address = "Neznam",
-                            BirthDay = new DateTime(2019, 3, 4, 14, 41, 5, 79, DateTimeKind.Local).AddTicks(2481),
+                            BirthDay = new DateTime(2019, 3, 4, 16, 6, 30, 351, DateTimeKind.Local).AddTicks(1308),
                             FirstName = "Maria",
                             LastName = "Marieva",
                             Salary = 999.10m
@@ -76,7 +76,7 @@ namespace EmployeesMapping.Data.Migrations
                         new
                         {
                             Id = 5,
-                            BirthDay = new DateTime(2018, 3, 19, 14, 41, 5, 81, DateTimeKind.Local).AddTicks(4307),
+                            BirthDay = new DateTime(2018, 3, 19, 16, 6, 30, 353, DateTimeKind.Local).AddTicks(4074),
                             FirstName = "Vyara",
                             LastName = "Marinova",
                             Salary = 2000.44m
