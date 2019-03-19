@@ -15,13 +15,13 @@
                 .WithMany(x => x.PaymentMethods)
                 .HasForeignKey(x => x.UserId);
 
-            builder.HasOne(x => x.BankAccount)
-                .WithOne(x => x.PaymentMethod)
-                .HasForeignKey<PaymentMethod>(x => x.BankAccountId);
+            //builder.HasOne(x => x.BankAccount)
+                //.WithOne(x => x.PaymentMethod)
+                //.HasForeignKey<PaymentMethod>(x => x.BankAccountId);
 
-            builder.HasOne(x => x.CreditCard)
-                .WithOne(x => x.PaymentMethod)
-                .HasForeignKey<PaymentMethod>(x => x.CreditCardId);
+            //builder.HasOne(x => x.CreditCard)
+                //.WithOne(x => x.PaymentMethod)
+                //.HasForeignKey<PaymentMethod>(x => x.CreditCardId);
         }
     }
 }

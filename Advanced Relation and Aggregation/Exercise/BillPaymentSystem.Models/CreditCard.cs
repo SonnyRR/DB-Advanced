@@ -23,8 +23,7 @@
         {
             get { return this.Limit - this.MoneyOwed; }
         }
-
-        public int PaymentMethodId { get; set; }
+        
         public PaymentMethod PaymentMethod { get; set; }
     }
 }

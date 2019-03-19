@@ -14,9 +14,9 @@
             using (BillPaymentSystemContext context = new BillPaymentSystemContext())
             {
                 DbInitializer initializer = new DbInitializer(context);
-                context.Database.EnsureDeleted();
-                context.Database.EnsureCreated();
-                initializer.Seed();               
+                //context.Database.EnsureDeleted();
+                //context.Database.EnsureCreated();
+                //initializer.Seed();               
 
                 var methods = context.PaymentMethods.ToList();
                 ;

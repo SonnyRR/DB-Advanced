@@ -60,12 +60,12 @@
                     }
                     else
                     {
-                        var destColl = property.GetMethod.Invoke(dest, new object[0]);
-                        var destType = destColl.GetType().GetGenericArguments()[0];
+                        var destCollection = property.GetMethod.Invoke(dest, new object[0]);
+                        var destType = destCollection.GetType().GetGenericArguments()[0];
 
                         foreach (var destP in (IEnumerable)sourceValue)
                         {
-                            ((IList)destColl).Add(this.DoMapping(destP, destType));
+                            ((IList)destCollection).Add(this.DoMapping(destP, destType));
                         }
                     }
                 }

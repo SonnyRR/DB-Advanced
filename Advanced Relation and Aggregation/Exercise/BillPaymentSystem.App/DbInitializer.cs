@@ -208,6 +208,7 @@
                     .FirstOrDefault(x => x.UserId == randomId);
 
                 paymentMethod.User = user;
+                paymentMethod.UserId = user.UserId;
 
                 if (i % 2 == 0)
                 {
@@ -220,6 +221,8 @@
                     .FirstOrDefault(x => x.CreditCardId == randomId);
 
                     paymentMethod.CreditCard = creditCard;                    
+                    paymentMethod.CreditCardId = creditCard.CreditCardId;
+                    creditCard.PaymentMethod = paymentMethod;
                 }
 
                 else if (i % 3 == 0)
@@ -233,6 +236,8 @@
                     .FirstOrDefault(x => x.CreditCardId == randomId);
 
                     paymentMethod.CreditCard = creditCard;
+                    paymentMethod.CreditCardId = creditCard.CreditCardId;
+                    creditCard.PaymentMethod = paymentMethod;
 
                     randomId = rng.Next(1, bankAccountsCount + 1);
 
@@ -241,6 +246,8 @@
                         .FirstOrDefault(x => x.BankAccountId == randomId);
 
                     paymentMethod.BankAccount = bankAccount;
+                    paymentMethod.BankAccountId = bankAccount.BankAccountId;
+                    bankAccount.PaymentMethod = paymentMethod;
                 }
 
                 else
@@ -254,6 +261,8 @@
                         .FirstOrDefault(x => x.BankAccountId == randomId);
 
                     paymentMethod.BankAccount = bankAccount;
+                    paymentMethod.BankAccountId = bankAccount.BankAccountId;
+                    bankAccount.PaymentMethod = paymentMethod;
 
                 }
 
