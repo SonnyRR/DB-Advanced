@@ -2,25 +2,35 @@
 {
     using System;
     using System.Linq;
+    using Microsoft.Extensions.DependencyInjection;
+
     using CustomMapper;
     using EmployeesMapping.App.DTO;
     using EmployeesMapping.Data;
+    using EmployeesMapping.App.Core;
+    using EmployeesMapping.App.Core.Contracts;
+    using EmployeesMapping.App.Commands.Contracts;
+    using EmployeesMapping.App.Commands;
 
     public class EntryPoint
     {
         public static void Main()
-        {           
-            using (EmployeesMappingContext db = new EmployeesMappingContext())
-            {
-                var employees = db.Employees
-                    .ToList();
+        {
+            IServiceProvider services = ConfigureServices();
 
-                var mapper = new Mapper();
+            IEngine engine = new Engine(services);
+            engine.Run();
+        }
 
-                var mapped = employees
-                    .Select(x => mapper.Map<EmployeeDto>(x))
-                    .ToList();
-            }
+        public static IServiceProvider ConfigureServices()
+        {
+            IServiceCollection services = new ServiceCollection();
+
+            services.AddDbContext<EmployeesMappingContext>();
+            services.AddTransient<ICommandInterpreter, CommandInterpreter>();
+            services.AddTransient<Mapper>();
+
+            return services.BuildServiceProvider();
         }
     }
 }

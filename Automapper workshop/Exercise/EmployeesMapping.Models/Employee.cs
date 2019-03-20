@@ -14,7 +14,7 @@
         public Employee(string firstName, string lastName, decimal salary)
         {
             this.FirstName = firstName;
-            this.LastName = LastName;
+            this.LastName = lastName;
             this.Salary = salary;
         }
 
