@@ -12,6 +12,7 @@
         public int UserId { get; set; }
         public User User { get; set; }
 
+
         [Xor(nameof(CreditCardId))]
         public int? BankAccountId { get; set; }
         public BankAccount BankAccount { get; set; }

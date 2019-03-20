@@ -20,6 +20,9 @@
             var user = context
                 .Users
                 .Include(x => x.PaymentMethods)
+                .ThenInclude(x => x.BankAccount)
+                .Include(x => x.PaymentMethods)
+                .ThenInclude(x => x.CreditCard)
                 .FirstOrDefault(x => x.UserId == desiredId);
 
             if (user != null)

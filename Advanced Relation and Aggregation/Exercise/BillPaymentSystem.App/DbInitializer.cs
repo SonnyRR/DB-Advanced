@@ -203,12 +203,7 @@
                 PaymentMethod paymentMethod = new PaymentMethod();
                 var randomId = rng.Next(1, usersCount + 1);
 
-                var user = context
-                    .Users
-                    .FirstOrDefault(x => x.UserId == randomId);
-
-                paymentMethod.User = user;
-                paymentMethod.UserId = user.UserId;
+                paymentMethod.UserId = randomId;
 
                 if (i % 2 == 0)
                 {
@@ -216,13 +211,7 @@
 
                     randomId = rng.Next(1, cardsCount + 1);
 
-                    var creditCard = context
-                    .CreditCards
-                    .FirstOrDefault(x => x.CreditCardId == randomId);
-
-                    paymentMethod.CreditCard = creditCard;                    
-                    paymentMethod.CreditCardId = creditCard.CreditCardId;
-                    creditCard.PaymentMethod = paymentMethod;
+                    paymentMethod.CreditCardId = randomId;
                 }
 
                 else if (i % 3 == 0)
@@ -230,24 +219,10 @@
                     paymentMethod.Type = PaymentType.CreditCard;
 
                     randomId = rng.Next(1, cardsCount + 1);
+                    paymentMethod.CreditCardId = randomId;
 
-                    var creditCard = context
-                    .CreditCards
-                    .FirstOrDefault(x => x.CreditCardId == randomId);
-
-                    paymentMethod.CreditCard = creditCard;
-                    paymentMethod.CreditCardId = creditCard.CreditCardId;
-                    creditCard.PaymentMethod = paymentMethod;
-
-                    randomId = rng.Next(1, bankAccountsCount + 1);
-
-                    var bankAccount = context
-                        .BankAccounts
-                        .FirstOrDefault(x => x.BankAccountId == randomId);
-
-                    paymentMethod.BankAccount = bankAccount;
-                    paymentMethod.BankAccountId = bankAccount.BankAccountId;
-                    bankAccount.PaymentMethod = paymentMethod;
+                    randomId = rng.Next(1, bankAccountsCount + 1);                    
+                    paymentMethod.BankAccountId = randomId;                    
                 }
 
                 else
@@ -255,14 +230,7 @@
                     paymentMethod.Type = PaymentType.BankAccount;
 
                     randomId = rng.Next(1, bankAccountsCount + 1);
-
-                    var bankAccount = context
-                        .BankAccounts
-                        .FirstOrDefault(x => x.BankAccountId == randomId);
-
-                    paymentMethod.BankAccount = bankAccount;
-                    paymentMethod.BankAccountId = bankAccount.BankAccountId;
-                    bankAccount.PaymentMethod = paymentMethod;
+                    paymentMethod.BankAccountId = randomId;
 
                 }
 
@@ -276,7 +244,7 @@
 
             context.PaymentMethods.AddRange(methods);
             context.SaveChanges();
-
+            ;
         }
 
         private bool IsValid(object @object)

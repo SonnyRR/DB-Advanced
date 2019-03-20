@@ -11,16 +11,16 @@
         public static void Main()
         {
 
-            using (BillPaymentSystemContext context = new BillPaymentSystemContext())
-            {
-                DbInitializer initializer = new DbInitializer(context);
-                //context.Database.EnsureDeleted();
-                //context.Database.EnsureCreated();
-                //initializer.Seed();               
-
-                var methods = context.PaymentMethods.ToList();
-                ;
-            }
+            //using (BillPaymentSystemContext context = new BillPaymentSystemContext())
+            //{
+            //    DbInitializer initializer = new DbInitializer(context);
+            //    //context.Database.EnsureDeleted();
+            //    //context.Database.EnsureCreated();
+            //    //initializer.Seed();               
+            //
+            //    //var methods = context.PaymentMethods.Include(x => x.BankAccount).ToList();
+            //    //;
+            //}
 
             var engine = new Engine();
             engine.Run();
