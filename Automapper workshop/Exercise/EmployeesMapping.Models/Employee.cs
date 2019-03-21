@@ -1,17 +1,18 @@
 ﻿namespace EmployeesMapping.Models
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
 
     public class Employee
     {
         public Employee()
         {
-
+            this.ManagedEmployees = new HashSet<Employee>();
         }
 
         public Employee(string firstName, string lastName, decimal salary)
+            : this()
         {
             this.FirstName = firstName;
             this.LastName = lastName;
@@ -49,6 +50,11 @@
 
         public DateTime? BirthDay { get; set; }
 
-        public string Address { get; set; }        
+        public string Address { get; set; }
+
+        public int? ManagerId { get; set; }
+        public Employee Manager { get; set; }
+
+        public ICollection<Employee> ManagedEmployees { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 {
     using System;
     using Microsoft.Extensions.DependencyInjection;
+
     using EmployeesMapping.App.Commands.Contracts;
     using EmployeesMapping.App.Core.Contracts;
 
@@ -24,6 +25,8 @@
                 var interpreter = this._provider.GetService<ICommandInterpreter>();
 
                 var result = interpreter.Read(input);
+
+                // Better to implement IWriter abstraction in the commands themselves.
                 Console.WriteLine(result);
             }
         }
