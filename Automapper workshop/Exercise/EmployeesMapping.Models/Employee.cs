@@ -8,7 +8,7 @@
     {
         public Employee()
         {
-            this.ManagedEmployees = new HashSet<Employee>();
+            this.ManagedEmployees = new List<Employee>();
         }
 
         public Employee(string firstName, string lastName, decimal salary)
@@ -55,6 +55,6 @@
         public int? ManagerId { get; set; }
         public Employee Manager { get; set; }
 
-        public ICollection<Employee> ManagedEmployees { get; set; }
+        public List<Employee> ManagedEmployees { get; set; }
     }
 }
