@@ -11,7 +11,11 @@
     <li>Entity Relations</li>
     <li>Advanced Relations and Aggregation</li>
     <li>Advanced Querying</li>
-    <li><i>TODO...</i>
+    <li>Automapper</li>
+    <li>Automapping Objects</li>
+    <li>JSON Processing</li>
+    <li>XML Processing</li>
+    <li>Best Practices</li>
 </ol>
 
 **All materials & resources belong to the SoftUni foundation. No copyright infringement intended.**
