@@ -9,12 +9,11 @@
 
     public class SetManagerCommand : ICommand
     {
-        private readonly Mapper _mapper;
+
         private readonly EmployeesMappingContext _context;
 
-        public SetManagerCommand(Mapper mapper, EmployeesMappingContext context)
+        public SetManagerCommand(EmployeesMappingContext context)
         {
-            this._mapper = mapper;
             this._context = context;
         }
 
@@ -43,10 +42,8 @@
 
             manager.ManagedEmployees.Add(employee);
             this._context.SaveChanges();
-
-            var managerDto = this._mapper.Map<ManagerDto>(manager);
-
-            return $"Successfully added {employee.FirstName} {employee.LastName} under {managerDto.FirstName} {manager.LastName}'s management.";
+            
+            return $"Successfully added {employee.FirstName} {employee.LastName} under {manager.FirstName} {manager.LastName}'s management.";
         }
     }
 }
