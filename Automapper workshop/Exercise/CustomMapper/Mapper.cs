@@ -42,7 +42,9 @@
                     continue;
                 }
 
-                var sourceValue = srcProperty.GetMethod.Invoke(source, new object[0]);
+                var sourceValue = srcProperty
+                    .GetMethod
+                    .Invoke(source, new object[0]);
 
                 if (ReflectionUtils.IsPrimitive(sourceValue.GetType()))
                 {
@@ -66,7 +68,8 @@
 
                         foreach (var destP in (IEnumerable)sourceValue)
                         {
-                            ((IList)destCollection).Add(this.DoMapping(destP, destType));
+                            var destInstance = Activator.CreateInstance(destType);
+                            ((IList)destCollection).Add(this.DoMapping(destP, destInstance));
                         }
                     }
                 }
