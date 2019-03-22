@@ -39,7 +39,7 @@
             this._context.SaveChanges();
 
             var employeeDto = this._mapper.Map<EmployeeDto>(employee);
-
+            
             return $"Successfully updated employee birthday {employee.BirthDay.Value.ToString(DATE_FORMAT)} with id {desiredEmployeeId} -> {employeeDto.FirstName} {employeeDto.LastName}";
 
         }

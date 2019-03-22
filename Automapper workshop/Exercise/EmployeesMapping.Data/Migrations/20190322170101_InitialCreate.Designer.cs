@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EmployeesMapping.Data.Migrations
 {
     [DbContext(typeof(EmployeesMappingContext))]
-    [Migration("20190319140630_InitialCreate")]
+    [Migration("20190322170101_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,9 +37,13 @@ namespace EmployeesMapping.Data.Migrations
                     b.Property<string>("LastName")
                         .IsRequired();
 
+                    b.Property<int?>("ManagerId");
+
                     b.Property<decimal>("Salary");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ManagerId");
 
                     b.ToTable("Employees");
 
@@ -55,7 +59,7 @@ namespace EmployeesMapping.Data.Migrations
                         {
                             Id = 2,
                             Address = "Neznam",
-                            BirthDay = new DateTime(2019, 3, 4, 16, 6, 30, 351, DateTimeKind.Local).AddTicks(1308),
+                            BirthDay = new DateTime(2019, 3, 7, 19, 1, 1, 170, DateTimeKind.Local).AddTicks(4017),
                             FirstName = "Maria",
                             LastName = "Marieva",
                             Salary = 999.10m
@@ -77,12 +81,43 @@ namespace EmployeesMapping.Data.Migrations
                         },
                         new
                         {
-                            Id = 5,
-                            BirthDay = new DateTime(2018, 3, 19, 16, 6, 30, 353, DateTimeKind.Local).AddTicks(4074),
-                            FirstName = "Vyara",
+                            Id = 6,
+                            BirthDay = new DateTime(2018, 3, 22, 19, 1, 1, 172, DateTimeKind.Local).AddTicks(6247),
+                            FirstName = "Miro",
+                            LastName = "Mirov",
+                            Salary = 2000.44m
+                        },
+                        new
+                        {
+                            Id = 7,
+                            BirthDay = new DateTime(2011, 1, 3, 19, 1, 1, 172, DateTimeKind.Local).AddTicks(6264),
+                            FirstName = "Blago",
+                            LastName = "Petkov",
+                            Salary = 2000.44m
+                        },
+                        new
+                        {
+                            Id = 8,
+                            BirthDay = new DateTime(2008, 4, 8, 19, 1, 1, 172, DateTimeKind.Local).AddTicks(6269),
+                            FirstName = "Emanuela",
                             LastName = "Marinova",
                             Salary = 2000.44m
+                        },
+                        new
+                        {
+                            Id = 9,
+                            BirthDay = new DateTime(2013, 9, 29, 19, 1, 1, 172, DateTimeKind.Local).AddTicks(6273),
+                            FirstName = "Koce",
+                            LastName = "Kocev",
+                            Salary = 2000.44m
                         });
+                });
+
+            modelBuilder.Entity("EmployeesMapping.Models.Employee", b =>
+                {
+                    b.HasOne("EmployeesMapping.Models.Employee", "Manager")
+                        .WithMany("ManagedEmployees")
+                        .HasForeignKey("ManagerId");
                 });
 #pragma warning restore 612, 618
         }

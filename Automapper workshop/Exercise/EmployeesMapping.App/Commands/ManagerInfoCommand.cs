@@ -46,8 +46,8 @@
             foreach (var empDto in managerDto.ManagedEmployees)
             {
                 builder.AppendLine($"- {empDto.FullName} - ${empDto.Salary:F2}");
-            }
-
+            }        
+        
             return builder.ToString().TrimEnd();
         }
     }

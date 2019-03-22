@@ -24,11 +24,13 @@
             var properties = dest
                 .GetType()
                 .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(p => p.CanWrite);
+                .Where(p => p.CanWrite)
+                .ToArray();
 
             var srcProperties = source
                 .GetType()
-                .GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .ToArray();
 
 
             foreach (var property in properties)
@@ -45,6 +47,9 @@
                 var sourceValue = srcProperty
                     .GetMethod
                     .Invoke(source, new object[0]);
+
+                if (sourceValue is null)
+                    continue;
 
                 if (ReflectionUtils.IsPrimitive(sourceValue.GetType()))
                 {

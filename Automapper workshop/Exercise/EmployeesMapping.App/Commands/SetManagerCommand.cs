@@ -42,7 +42,7 @@
 
             manager.ManagedEmployees.Add(employee);
             this._context.SaveChanges();
-            
+
             return $"Successfully added {employee.FirstName} {employee.LastName} under {manager.FirstName} {manager.LastName}'s management.";
         }
     }
