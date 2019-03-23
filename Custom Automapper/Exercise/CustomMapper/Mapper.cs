@@ -95,7 +95,14 @@
 
                 else
                 {
-                    var propertyInstance = Activator.CreateInstance(srcProperty.GetValue(source).GetType());
+                    // FIXME
+                    //var propertyInstance = Activator.CreateInstance(srcProperty.GetValue(source).GetType());
+
+                    var propertyType = property.DeclaringType;
+                    var name = propertyType.Name;
+                                      
+                    var propertyInstance = Activator.CreateInstance(propertyType);
+
                     property.SetValue(dest,
                         this.DoMapping(srcProperty.GetValue(source), propertyInstance));
                 }
