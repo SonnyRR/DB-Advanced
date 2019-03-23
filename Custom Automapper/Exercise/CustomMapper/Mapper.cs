@@ -98,13 +98,12 @@
                     // FIXME
                     //var propertyInstance = Activator.CreateInstance(srcProperty.GetValue(source).GetType());
 
-                    var propertyType = property.DeclaringType;
+                    var propertyType = property.PropertyType;
                     var name = propertyType.Name;
                                       
                     var propertyInstance = Activator.CreateInstance(propertyType);
 
-                    property.SetValue(dest,
-                        this.DoMapping(srcProperty.GetValue(source), propertyInstance));
+                    property.SetValue(dest, this.DoMapping(sourceValue, propertyInstance));
                 }
             }
 

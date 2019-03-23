@@ -40,11 +40,17 @@
             foreach (var emp in employees)
             {
                 var empMapped = this._mapper.Map<EmployeeProjectionDto>(emp);
+                mapped.Add(empMapped);
+            }
 
-                //mapped.Add(empMapped);
-            }           
+            mapped.ForEach(x =>
+            {
+                var managerOutputStr = x.Manager?.LastName ?? "[no manager]";
 
-            return string.Empty;
+                builder.AppendLine($"{x.FirstName} {x.LastName} - ${x.Salary:F2} - Manager: {managerOutputStr}");
+            });
+
+            return builder.ToString();
         }
     }
 }
