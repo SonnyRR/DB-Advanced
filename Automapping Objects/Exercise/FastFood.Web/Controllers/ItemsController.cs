@@ -32,7 +32,7 @@
 
         [HttpPost]
         public IActionResult Create(CreateItemInputModel model)
-        {   
+        {
             if (ModelState.IsValid == false)
             {
                 return this.RedirectToAction("Error", "Home");

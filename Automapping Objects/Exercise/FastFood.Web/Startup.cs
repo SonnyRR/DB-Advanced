@@ -37,10 +37,9 @@ namespace FastFood.Web
 
             services.AddDbContext<FastFoodContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection"), 
+                    Configuration.GetConnectionString("DesktopConnection"),
                     x => x.MigrationsAssembly("FastFood.Data")));
 
-            //TODO add Automapper configuration
 
             services.AddAutoMapper(x => x.AddProfile(new FastFoodProfile()));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);

@@ -7,6 +7,7 @@
     using ViewModels.Orders;
     using FastFood.Web.ViewModels.Items;
     using FastFood.Web.ViewModels.Employees;
+    using FastFood.Web.ViewModels.Categories;
 
     public class FastFoodProfile : Profile
     {
@@ -21,33 +22,45 @@
             this.CreateMap<Position, PositionsAllViewModel>()
                 .ForMember(x => x.Name, y => y.MapFrom(s => s.Name));
 
-            this.CreateMap<Position, RegisterEmployeeViewModel>()
-                .ForMember(x => x.PositionId, y => y.MapFrom(p => p.Id));
-
             #endregion
 
             #region EMPLOYEES
 
             this.CreateMap<RegisterEmployeeInputModel, Employee>();
-            this.CreateMap<Employee, EmployeesAllViewModel>();
+
+            this.CreateMap<Position, RegisterEmployeeViewModel>()
+                .ForMember(x => x.PositionId, y => y.MapFrom(p => p.Id));
+
+            this.CreateMap<Employee, EmployeesAllViewModel>()
+                .ForMember(x => x.Position, y => y.MapFrom(emp => emp.Position.Name));
 
             #endregion
 
             #region ORDERS
 
-            this.CreateMap<CreateOrderInputModel, OrderItem>()
-                .ForMember(x => x.ItemId, y => y.MapFrom(inputModel => inputModel.ItemId))
-                .ForMember(x => x.Quantity, y => y.MapFrom(inputModel => inputModel.Quantity));
+            this.CreateMap<CreateOrderInputModel, OrderItem>();
+            this.CreateMap<OrderItem, OrderAllViewModel>();
 
 
             #endregion
 
             #region ITEMS
 
-            this.CreateMap<CreateItemInputModel, Item>()
-                .ForMember(x => x.Name, y => y.MapFrom(inputModel => inputModel.Name))
-                .ForMember(x => x.Price, y => y.MapFrom(inputModel => inputModel.Price))
-                .ForMember(x => x.CategoryId, y => y.MapFrom(inputModel => inputModel.CategoryId));
+            this.CreateMap<CreateItemInputModel, Item>();
+            this.CreateMap<Item, ItemsAllViewModels>()
+                .ForMember(x => x.Category, y => y.MapFrom(i => i.Category.Name));
+
+            #endregion
+
+            #region CATEGORIES
+
+            this.CreateMap<CreateCategoryInputModel, Category>()
+                .ForMember(x => x.Name, y => y.MapFrom(inputModel => inputModel.CategoryName));
+
+            this.CreateMap<Category, CategoryAllViewModel>();
+
+            this.CreateMap<Category, CreateItemViewModel>()
+                .ForMember(x => x.CategoryId, y => y.MapFrom(inputModel => inputModel.Id));
 
             #endregion
         }

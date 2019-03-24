@@ -47,7 +47,7 @@
         {
             var categories = this.context
                 .Categories
-                .ProjectTo<CategoryAllViewModel>()
+                .ProjectTo<CategoryAllViewModel>(this.mapper.ConfigurationProvider)
                 .ToList();
 
             return this.View(categories);

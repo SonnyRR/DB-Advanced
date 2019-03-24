@@ -15,9 +15,6 @@
         {
         }
 
-        //public FastFoodContext(DbContextOptions options) : base(options)
-        //{
-        //}
 
         public DbSet<Category> Categories { get; set; }
 
