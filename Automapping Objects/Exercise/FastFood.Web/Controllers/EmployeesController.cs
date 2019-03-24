@@ -23,7 +23,7 @@
         public IActionResult Register()
         {
 
-            var employees = this.context.Employees
+            var employees = this.context.Positions
                 .ProjectTo<RegisterEmployeeViewModel>(mapper.ConfigurationProvider)
                 .ToList();
 

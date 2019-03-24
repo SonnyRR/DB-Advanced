@@ -6,7 +6,6 @@
     using ViewModels.Positions;
     using ViewModels.Orders;
     using FastFood.Web.ViewModels.Items;
-    using System;
     using FastFood.Web.ViewModels.Employees;
 
     public class FastFoodProfile : Profile
@@ -22,15 +21,17 @@
             this.CreateMap<Position, PositionsAllViewModel>()
                 .ForMember(x => x.Name, y => y.MapFrom(s => s.Name));
 
+            this.CreateMap<Position, RegisterEmployeeViewModel>()
+                .ForMember(x => x.PositionId, y => y.MapFrom(p => p.Id));
+
             #endregion
 
             #region EMPLOYEES
 
-            this.CreateMap<RegisterEmployeeViewModel, Employee>()
-                .ForMember(x => x.Name, y => y.MapFrom(o => o.)
+            this.CreateMap<RegisterEmployeeInputModel, Employee>();
+            this.CreateMap<Employee, EmployeesAllViewModel>();
 
             #endregion
-
 
             #region ORDERS
 
