@@ -9,6 +9,7 @@
     using ViewModels.Orders;
     using AutoMapper.QueryableExtensions;
     using FastFood.Models;
+    using FastFood.Models.Enums;
 
     public class OrdersController : Controller
     {
@@ -40,7 +41,17 @@
                 return this.RedirectToAction("Error", "Home");
             }
 
-            OrderItem order = this.mapper.Map<OrderItem>(model);
+            Order order = this.mapper.Map<Order>(model);
+            order.DateTime = DateTime.Now;
+
+            order.Type = Enum.Parse<OrderType>(model.OrderType);
+
+            order.OrderItems.Add(new OrderItem()
+            {
+                Quantity = model.Quantity,
+                ItemId = model.ItemId,
+                Order = order
+            });
 
             this.context.Orders.Add(order);
 

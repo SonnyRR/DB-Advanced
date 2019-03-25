@@ -38,8 +38,8 @@
 
             #region ORDERS
 
-            this.CreateMap<CreateOrderInputModel, OrderItem>();
-            this.CreateMap<OrderItem, OrderAllViewModel>();
+            this.CreateMap<CreateOrderInputModel, Order>();
+            this.CreateMap<Order, OrderAllViewModel>();
 
 
             #endregion
