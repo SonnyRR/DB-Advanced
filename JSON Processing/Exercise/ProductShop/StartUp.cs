@@ -115,6 +115,7 @@ namespace ProductShop
         public static string GetProductsInRange(ProductShopContext context)
         {
             List<ProductsInRangeDto> products = context.Products
+                .OrderBy(x => x.Price)
                 .Where(x => x.Price >= 500M && x.Price <= 1000M)
                 .ProjectTo<ProductsInRangeDto>()
                 .ToList();
