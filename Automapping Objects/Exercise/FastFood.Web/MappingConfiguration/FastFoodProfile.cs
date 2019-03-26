@@ -39,7 +39,10 @@
             #region ORDERS
 
             this.CreateMap<CreateOrderInputModel, Order>();
-            this.CreateMap<Order, OrderAllViewModel>();
+            this.CreateMap<Order, OrderAllViewModel>()
+                .ForMember(x => x.Employee, y => y.MapFrom(o => o.Employee.Name))
+                .ForMember(x => x.DateTime, y => y.MapFrom(d => d.DateTime.ToString("dd-MM-yyyy H:mm")))
+                .ForMember(x => x.OrderId, y => y.MapFrom(o => o.Id));
 
 
             #endregion
