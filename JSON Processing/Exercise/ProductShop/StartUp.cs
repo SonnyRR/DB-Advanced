@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using ProductShop.Data;
 using ProductShop.Export;
@@ -23,7 +24,7 @@ namespace ProductShop
         {
             using (ProductShopContext context = new ProductShopContext())
             {
-                string result = GetProductsInRange(context);
+                string result = GetSoldProducts(context);
                 Console.WriteLine(result);
             }
         }
@@ -121,6 +122,22 @@ namespace ProductShop
                 .ToList();
 
             string json = JsonConvert.SerializeObject(products);
+            return json;
+        }
+
+        public static string GetSoldProducts(ProductShopContext context)
+        {
+            var users = context.Users
+                .Include(x => x.ProductsSold)
+                .FromSql()
+                .Where(x => x.ProductsSold.Count >= 1)
+                .OrderBy(x => x.LastName)
+                .ThenBy(x => x.FirstName)
+                .ProjectTo<UserProductsSellerDto>()
+                .ToList();
+
+            string json = JsonConvert.SerializeObject(users);
+
             return json;
         }
     }
