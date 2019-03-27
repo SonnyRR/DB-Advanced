@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using ProductShop.Data;
-using ProductShop.Export;
-using ProductShop.Models;
-
-namespace ProductShop
+﻿namespace ProductShop
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using AutoMapper;
+    using AutoMapper.QueryableExtensions;
+    using Microsoft.EntityFrameworkCore;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Serialization;
+    using ProductShop.Data;
+    using ProductShop.Export;
+    using ProductShop.Models;
+
     public class StartUp
     {
         public static void Main(string[] args)

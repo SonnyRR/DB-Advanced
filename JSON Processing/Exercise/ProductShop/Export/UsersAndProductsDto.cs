@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace ProductShop.Export
+﻿namespace ProductShop.Export
 {
+    using System.Collections.Generic;
+
     public class ProductsDto
     {
         public string Name { get; set; }
