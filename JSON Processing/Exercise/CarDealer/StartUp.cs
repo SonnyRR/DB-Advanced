@@ -8,6 +8,7 @@
 
     using AutoMapper;
     using CarDealer.Data;
+    using CarDealer.DTO;
     using CarDealer.Models;
     using Newtonsoft.Json;
 
@@ -16,6 +17,8 @@
     {
         public static void Main()
         {
+            Mapper.Initialize(cfg => cfg.AddProfile(new CarDealerProfile()));
+
             Insert();
         }
 
@@ -38,13 +41,13 @@
             string salesPath = @"../../../Datasets/sales.json";
             string suppliersPath = @"../../../Datasets/suppliers.json";
 
-            if (File.Exists(salesPath))
+            if (File.Exists(carsPath))
             {
-                var importData = File.ReadAllText(salesPath);
+                var importData = File.ReadAllText(carsPath);
 
                 using (var context = new CarDealerContext())
                 {
-                    string output = ImportSales(context, importData);
+                    string output = ImportCars(context, importData);
                     Console.WriteLine(output);
                 }
 
@@ -79,13 +82,49 @@
 
         public static string ImportCars(CarDealerContext context, string inputJson)
         {
-            var cars = JsonConvert.DeserializeObject<Car[]>(inputJson);
+            var cars = JsonConvert.DeserializeObject<CarInsertDto[]>(inputJson);
+            var mappedCars = new List<Car>();
+            int affectedRows = 0;
 
-            context.Cars.AddRange(cars);
-            int affectedRows = context.SaveChanges();
+            foreach (var car in cars)
+            {
+                Car vehicle = Mapper.Map<CarInsertDto, Car>(car);
+                mappedCars.Add(vehicle);
+            }
+
+            affectedRows += context.SaveChanges();
+            mappedCars = context.Cars.ToList();
+
+            var parts = new List<PartCar>();
+
+            foreach (var car in mappedCars)
+            {
+                var partIds = cars.FirstOrDefault(x => x.Make == car.Make
+                && x.Model == car.Model && x.TravelledDistance == car.TravelledDistance)
+                .PartsId
+                .ToList();
+
+                if (partIds == null)
+                    continue;
+
+                partIds.ForEach(pid =>
+                {
+                    var currentPair = new PartCar()
+                    {
+                        Car = car,
+                        PartId = pid
+                    };
+
+                    parts.Add(currentPair);
+                }
+                );
+            }
+
+            context.SaveChanges();
 
             return $"Successfully imported {affectedRows}.";
         }
+
         public static string ImportCustomers(CarDealerContext context, string inputJson)
         {
             var customers = JsonConvert.DeserializeObject<Customer[]>(inputJson);
