@@ -16,7 +16,7 @@
     {
         public static void Main()
         {
-            
+            Insert();
         }
 
         private static bool IsValid(object @object)
@@ -28,7 +28,7 @@
             bool isValid = Validator.TryValidateObject(@object, validationContext, validations, true);
 
             return isValid;
-        }  
+        }
 
         public static void Insert()
         {
@@ -38,16 +38,72 @@
             string salesPath = @"../../../Datasets/sales.json";
             string suppliersPath = @"../../../Datasets/suppliers.json";
 
-            if (File.Exists(""))
+            if (File.Exists(salesPath))
             {
-                var ImportData = File.ReadAllText();
+                var importData = File.ReadAllText(salesPath);
 
                 using (var context = new CarDealerContext())
                 {
-                    string output;
+                    string output = ImportSales(context, importData);
                     Console.WriteLine(output);
                 }
 
             }
         }
+
+        public static string ImportSuppliers(CarDealerContext context, string inputJson)
+        {
+            var suppliers = JsonConvert.DeserializeObject<Supplier[]>(inputJson);
+
+            context.Suppliers.AddRange(suppliers);
+            int affectedRows = context.SaveChanges();
+
+            return $"Successfully imported {affectedRows}.";
+        }
+
+        public static string ImportParts(CarDealerContext context, string inputJson)
+        {
+            var existingSuppliers = context.Suppliers
+                .Select(s => s.Id)
+                .ToArray();
+
+            var parts = JsonConvert.DeserializeObject<Part[]>(inputJson)
+                .Where(p => existingSuppliers.Contains(p.SupplierId))
+                .ToArray();
+
+            context.Parts.AddRange(parts);
+            int affectedRows = context.SaveChanges();
+
+            return $"Successfully imported {affectedRows}.";
+        }
+
+        public static string ImportCars(CarDealerContext context, string inputJson)
+        {
+            var cars = JsonConvert.DeserializeObject<Car[]>(inputJson);
+
+            context.Cars.AddRange(cars);
+            int affectedRows = context.SaveChanges();
+
+            return $"Successfully imported {affectedRows}.";
+        }
+        public static string ImportCustomers(CarDealerContext context, string inputJson)
+        {
+            var customers = JsonConvert.DeserializeObject<Customer[]>(inputJson);
+
+            context.Customers.AddRange(customers);
+            int affectedRows = context.SaveChanges();
+
+            return $"Successfully imported {affectedRows}.";
+        }
+
+        public static string ImportSales(CarDealerContext context, string inputJson)
+        {
+            var sales = JsonConvert.DeserializeObject<Sale[]>(inputJson);
+
+            context.Sales.AddRange(sales);
+            int affectedRows = context.SaveChanges();
+
+            return $"Successfully imported {affectedRows}.";
+        }
+    }
 }
