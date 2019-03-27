@@ -43,7 +43,7 @@
 
         public static void InsertStatment()
         {
-            string usersJsonPath = @"../../../ Datasets/users.json";
+            string usersJsonPath = @"../../../Datasets/users.json";
             string productsJsonPath = @"../../../Datasets/products.json";
             string categoriesJsonPath = @"../../../Datasets/categories.json";
             string categoriesProductsPath = @"../../../Datasets/categories-products.json";
