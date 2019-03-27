@@ -6,6 +6,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using ProductShop.Data;
 using ProductShop.Export;
 using ProductShop.Models;
@@ -24,7 +25,7 @@ namespace ProductShop
         {
             using (ProductShopContext context = new ProductShopContext())
             {
-                string result = GetSoldProducts(context);
+                string result = GetCategoriesByProductsCount(context);
                 Console.WriteLine(result);
             }
         }
@@ -129,14 +130,41 @@ namespace ProductShop
         {
             var users = context.Users
                 .Include(x => x.ProductsSold)
-                .FromSql()
-                .Where(x => x.ProductsSold.Count >= 1)
+                .Where(x => x.ProductsSold.Any(y => y.Buyer != null))
                 .OrderBy(x => x.LastName)
                 .ThenBy(x => x.FirstName)
                 .ProjectTo<UserProductsSellerDto>()
                 .ToList();
 
-            string json = JsonConvert.SerializeObject(users);
+            string json = JsonConvert.SerializeObject(users, Formatting.Indented);
+
+            return json;
+        }
+
+        public static string GetCategoriesByProductsCount(ProductShopContext context)
+        {
+            var categories = context.Categories
+                .OrderByDescending(c => c.CategoryProducts.Count)
+                .Select(x => new
+                {
+                    Category = x.Name,
+                    ProductsCount = x.CategoryProducts.Count,
+                    AveragePrice = $"{x.CategoryProducts.Average(c => c.Product.Price):F2}",
+                    TotalRevenue = $"{x.CategoryProducts.Sum(c => c.Product.Price)}"
+                })
+                .ToList();
+
+            string json = JsonConvert.SerializeObject(categories,
+                new JsonSerializerSettings()
+                {
+                    ContractResolver = new DefaultContractResolver()
+                    {
+                        NamingStrategy = new CamelCaseNamingStrategy(),
+                    },
+
+                    Formatting = Formatting.Indented
+                }
+            );
 
             return json;
         }
