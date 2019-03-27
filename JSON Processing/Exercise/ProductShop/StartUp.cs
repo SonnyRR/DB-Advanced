@@ -173,7 +173,7 @@ namespace ProductShop
         {
             var users = context.Users
                 .Where(u => u.ProductsSold.Any(p => p.Buyer != null))
-                .OrderByDescending(u => u.ProductsSold.Count)
+                .OrderByDescending(u => u.ProductsSold.Count(p => p.Buyer != null))
                 .ProjectTo<UserDto>()
                 .ToList();
 

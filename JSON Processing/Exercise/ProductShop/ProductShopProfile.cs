@@ -2,6 +2,7 @@
 using ProductShop.Export;
 using ProductShop.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ProductShop
 {
@@ -24,7 +25,7 @@ namespace ProductShop
                 .ForMember(x => x.SoldProducts, y => y.MapFrom(obj => obj));
 
             CreateMap<User, SoldProducts>()
-                .ForMember(x => x.Products, y => y.MapFrom(obj => obj.ProductsSold));
+                .ForMember(x => x.Products, y => y.MapFrom(obj => obj.ProductsSold.Where(x => x.Buyer != null)));
 
             CreateMap<Product, ProductsDto>();
 
