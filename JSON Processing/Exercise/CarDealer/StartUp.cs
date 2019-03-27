@@ -92,7 +92,9 @@
                 mappedCars.Add(vehicle);
             }
 
+            context.Cars.AddRange(mappedCars);
             affectedRows += context.SaveChanges();
+
             mappedCars = context.Cars.ToList();
 
             var parts = new List<PartCar>();
@@ -120,6 +122,7 @@
                 );
             }
 
+            context.PartCars.AddRange(parts);
             context.SaveChanges();
 
             return $"Successfully imported {affectedRows}.";
