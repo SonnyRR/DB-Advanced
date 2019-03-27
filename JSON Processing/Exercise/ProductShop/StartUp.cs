@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.IO;
     using System.Linq;
     using AutoMapper;
@@ -13,7 +14,7 @@
     using ProductShop.Export;
     using ProductShop.Models;
 
-    public class StartUp
+    public static class StartUp
     {
         public static void Main(string[] args)
         {
@@ -28,6 +29,16 @@
                 string result = GetUsersWithProducts(context);
                 Console.WriteLine(result);
             }
+        }
+        private static bool IsValid(object @object)
+        {
+            ICollection<ValidationResult> validations = new List<ValidationResult>();
+
+            var validationContext = new System.ComponentModel.DataAnnotations.ValidationContext(@object);
+
+            bool isValid = Validator.TryValidateObject(@object, validationContext, validations, true);
+
+            return isValid;
         }
 
         public static void InsertStatment()
@@ -70,7 +81,7 @@
             {
                 var product = products[i];
 
-                if (product.Name.Length < 3 || product.Price == 0.0M || product.SellerId < 1)
+                if (IsValid(product) == false)
                 {
                     product = null;
                 }
@@ -92,7 +103,7 @@
             {
                 var category = categories[i];
 
-                if (category.Name.Length < 3 || category.Name.Length > 15)
+                if (IsValid(category) == false)
                 {
                     category = null;
                 }

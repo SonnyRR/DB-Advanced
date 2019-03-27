@@ -1,7 +1,9 @@
 ﻿namespace ProductShop.Models
 {
-    using Newtonsoft.Json;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+
+    using Newtonsoft.Json;
 
     public class User
     {
@@ -12,8 +14,10 @@
         }
 
         [JsonIgnore]
+        [Key]
         public int Id { get; set; }
 
+        [MinLength(3)]
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
