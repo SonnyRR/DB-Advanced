@@ -25,7 +25,7 @@ namespace ProductShop
         {
             using (ProductShopContext context = new ProductShopContext())
             {
-                string result = GetCategoriesByProductsCount(context);
+                string result = GetUsersWithProducts(context);
                 Console.WriteLine(result);
             }
         }
@@ -165,6 +165,30 @@ namespace ProductShop
                     Formatting = Formatting.Indented
                 }
             );
+
+            return json;
+        }
+
+        public static string GetUsersWithProducts(ProductShopContext context)
+        {
+            var users = context.Users
+                .Where(u => u.ProductsSold.Any(p => p.Buyer != null))
+                .OrderByDescending(u => u.ProductsSold.Count)
+                .ProjectTo<UserDto>()
+                .ToList();
+
+            var objectToSerialize = Mapper.Map<UsersAndProductsDto>(users);
+
+            string json = JsonConvert.SerializeObject(objectToSerialize, new JsonSerializerSettings()
+            {
+                ContractResolver = new DefaultContractResolver()
+                {
+                    NamingStrategy = new CamelCaseNamingStrategy(),                    
+                },
+                
+                NullValueHandling = NullValueHandling.Ignore,
+                Formatting = Formatting.Indented
+            });
 
             return json;
         }
