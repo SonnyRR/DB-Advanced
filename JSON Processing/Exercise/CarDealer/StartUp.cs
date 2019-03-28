@@ -11,7 +11,8 @@
     using CarDealer.DTO;
     using CarDealer.Models;
     using Newtonsoft.Json;
-
+    using Newtonsoft.Json.Converters;
+    using Newtonsoft.Json.Serialization;
 
     public class StartUp
     {
@@ -19,7 +20,7 @@
         {
             Mapper.Initialize(cfg => cfg.AddProfile(new CarDealerProfile()));
 
-            Insert();
+            QueryAndExport();
         }
 
         private static bool IsValid(object @object)
@@ -33,6 +34,15 @@
             return isValid;
         }
 
+        public static void QueryAndExport()
+        {
+            using (var context = new CarDealerContext())
+            {
+                string result = GetOrderedCustomers(context);
+                Console.WriteLine(result);
+            }
+        }
+
         public static void Insert()
         {
             string carsPath = @"../../../Datasets/cars.json";
@@ -41,13 +51,13 @@
             string salesPath = @"../../../Datasets/sales.json";
             string suppliersPath = @"../../../Datasets/suppliers.json";
 
-            if (File.Exists(carsPath))
+            if (File.Exists(salesPath))
             {
-                var importData = File.ReadAllText(carsPath);
+                var importData = File.ReadAllText(salesPath);
 
                 using (var context = new CarDealerContext())
                 {
-                    string output = ImportCars(context, importData);
+                    string output = ImportSales(context, importData);
                     Console.WriteLine(output);
                 }
 
@@ -138,6 +148,30 @@
             int affectedRows = context.SaveChanges();
 
             return $"Successfully imported {affectedRows}.";
+        }
+
+        public static string GetOrderedCustomers(CarDealerContext context)
+        {
+
+            var customers = context.Customers
+                .ToList()
+                .OrderBy(c => c.BirthDate)
+                .ThenBy(c => c.IsYoungDriver)
+                .ToList();
+
+
+            string json = JsonConvert.SerializeObject(customers, new JsonSerializerSettings()
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                DateFormatString = "dd/MM/yyyy",
+                Formatting = Formatting.Indented,
+                ContractResolver = new DefaultContractResolver()
+                {
+                    NamingStrategy = new CamelCaseNamingStrategy()
+                }
+            });
+
+            return json;
         }
     }
 }
