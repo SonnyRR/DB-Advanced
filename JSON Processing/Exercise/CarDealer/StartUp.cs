@@ -39,7 +39,7 @@
         {
             using (var context = new CarDealerContext())
             {
-                string result = GetCarsWithTheirListOfParts(context);
+                string result = GetSalesWithAppliedDiscount(context);
                 Console.WriteLine(result);
             }
         }
@@ -246,6 +246,72 @@
             {
                 NullValueHandling = NullValueHandling.Ignore,
                 Formatting = Formatting.Indented
+            });
+
+            return json;
+        }
+
+        public static string GetTotalSalesByCustomer(CarDealerContext context)
+        {
+            var customers = context.Customers
+                .Include(c => c.Sales)
+                .ThenInclude(s => s.Car)
+                .ThenInclude(c => c.PartCars)
+                .ThenInclude(pc => pc.Part)
+                .Where(c => c.Sales.Count >= 1)
+                .Select(x => new
+                {
+                    FullName = x.Name,
+                    BoughtCars = x.Sales.Count,
+                    SpentMoney = x.Sales.Sum(y => y.Car.PartCars.Sum(z => z.Part.Price))
+                })
+                .ToList()
+                .OrderByDescending(a => a.SpentMoney)
+                .ThenBy(a => a.BoughtCars)
+                .ToList();
+
+
+            var json = JsonConvert.SerializeObject(customers, new JsonSerializerSettings()
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                Formatting = Formatting.Indented,
+                ContractResolver = new DefaultContractResolver()
+                {
+                    NamingStrategy = new CamelCaseNamingStrategy()
+                }
+            });
+
+            return json;
+        }
+
+        public static string GetSalesWithAppliedDiscount(CarDealerContext context)
+        {
+            var sales = context.Sales
+                .Take(10)
+                .Select(x => new
+                {
+                    car = new
+                    {
+                        Make = x.Car.Make,
+                        Model = x.Car.Model,
+                        TravelledDistance = x.Car.TravelledDistance
+                    },
+
+                    customerName = x.Customer.Name,
+                    Discount = $"{x.Discount:F2}",
+                    price = $"{x.Car.PartCars.Sum(y => y.Part.Price):F2}",
+                    priceWithDiscount = $"{x.Car.PartCars.Sum(y => y.Part.Price) - (x.Car.PartCars.Sum(y => y.Part.Price) * (x.Discount / 100)):F2}",
+                })
+                .ToList();
+
+            var json = JsonConvert.SerializeObject(sales, new JsonSerializerSettings()
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                Formatting = Formatting.Indented,
+                //ContractResolver = new DefaultContractResolver()
+                //{
+                //    NamingStrategy = new CamelCaseNamingStrategy()
+                //}
             });
 
             return json;
