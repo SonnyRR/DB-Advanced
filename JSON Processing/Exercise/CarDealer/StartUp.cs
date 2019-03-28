@@ -10,6 +10,7 @@
     using CarDealer.Data;
     using CarDealer.DTO;
     using CarDealer.Models;
+    using Microsoft.EntityFrameworkCore;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;
     using Newtonsoft.Json.Serialization;
@@ -38,7 +39,7 @@
         {
             using (var context = new CarDealerContext())
             {
-                string result = GetOrderedCustomers(context);
+                string result = GetCarsWithTheirListOfParts(context);
                 Console.WriteLine(result);
             }
         }
@@ -93,7 +94,7 @@
         public static string ImportCars(CarDealerContext context, string inputJson)
         {
             var cars = JsonConvert.DeserializeObject<CarInsertDto[]>(inputJson);
-            var mappedCars = new List<Car>();            
+            var mappedCars = new List<Car>();
 
             foreach (var car in cars)
             {
@@ -163,12 +164,88 @@
             string json = JsonConvert.SerializeObject(customers, new JsonSerializerSettings()
             {
                 NullValueHandling = NullValueHandling.Ignore,
+
                 DateFormatString = "dd/MM/yyyy",
                 Formatting = Formatting.Indented,
-                ContractResolver = new DefaultContractResolver()
+                //ContractResolver = new DefaultContractResolver()
+                //{
+                //    NamingStrategy = new CamelCaseNamingStrategy()
+                //}
+            });
+
+            return json;
+        }
+
+        public static string GetCarsFromMakeToyota(CarDealerContext context)
+        {
+
+            var toyotas = context.Cars
+                .Where(c => string.Compare(c.Make, "Toyota", true) == 0)
+                .OrderBy(c => c.Model)
+                .ThenByDescending(c => c.TravelledDistance)
+                .ToList();
+
+            string json = JsonConvert.SerializeObject(toyotas, new JsonSerializerSettings()
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                Formatting = Formatting.Indented
+            });
+
+
+            return json;
+        }
+
+        public static string GetLocalSuppliers(CarDealerContext context)
+        {
+
+            var suppliers = context.Suppliers
+                .Where(s => s.IsImporter == false)
+                .Select(s => new
                 {
-                    NamingStrategy = new CamelCaseNamingStrategy()
-                }
+                    Id = s.Id,
+                    Name = s.Name,
+                    PartsCount = s.Parts.Count
+                })
+                .ToList();
+
+            var json = JsonConvert.SerializeObject(suppliers, new JsonSerializerSettings()
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                Formatting = Formatting.Indented
+            });
+
+            return json;
+        }
+
+        public static string GetCarsWithTheirListOfParts(CarDealerContext context)
+        {
+
+            var cars = context.Cars
+                .Include(c => c.PartCars)
+                .ThenInclude(c => c.Part)
+                .Select(c => new
+                {
+                    car = new
+                    {
+                        Make = c.Make,
+                        Model = c.Model,
+                        TravelledDistance = c.TravelledDistance
+                    },
+
+                    parts = c.PartCars
+                    .Select(p => new
+                    {
+                        Name = p.Part.Name,
+                        Price = $"{p.Part.Price:F2}"
+                    })
+                    .ToList()
+                })
+                .ToList();
+
+            var json = JsonConvert.SerializeObject(cars, new JsonSerializerSettings()
+            {
+                NullValueHandling = NullValueHandling.Ignore,
+                Formatting = Formatting.Indented
             });
 
             return json;

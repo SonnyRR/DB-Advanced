@@ -6,6 +6,7 @@ namespace CarDealer.Models
 {
     public class Customer
     {
+        [JsonIgnore]
         public int Id { get; set; }
 
         public string Name { get; set; }
