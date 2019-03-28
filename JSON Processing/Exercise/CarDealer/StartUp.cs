@@ -83,27 +83,16 @@
         public static string ImportCars(CarDealerContext context, string inputJson)
         {
             var cars = JsonConvert.DeserializeObject<CarInsertDto[]>(inputJson);
-            var mappedCars = new List<Car>();
-            int affectedRows = 0;
+            var mappedCars = new List<Car>();            
 
             foreach (var car in cars)
             {
                 Car vehicle = Mapper.Map<CarInsertDto, Car>(car);
                 mappedCars.Add(vehicle);
-            }
 
-            context.Cars.AddRange(mappedCars);
-            affectedRows += context.SaveChanges();
-
-            mappedCars = context.Cars.ToList();
-
-            var parts = new List<PartCar>();
-
-            foreach (var car in mappedCars)
-            {
-                var partIds = cars.FirstOrDefault(x => x.Make == car.Make
-                && x.Model == car.Model && x.TravelledDistance == car.TravelledDistance)
+                var partIds = car
                 .PartsId
+                .Distinct()
                 .ToList();
 
                 if (partIds == null)
@@ -113,17 +102,20 @@
                 {
                     var currentPair = new PartCar()
                     {
-                        Car = car,
+                        Car = vehicle,
                         PartId = pid
                     };
 
-                    parts.Add(currentPair);
+                    vehicle.PartCars.Add(currentPair);
                 }
                 );
+
             }
 
-            context.PartCars.AddRange(parts);
+            context.Cars.AddRange(mappedCars);
+
             context.SaveChanges();
+            int affectedRows = context.Cars.Count();
 
             return $"Successfully imported {affectedRows}.";
         }
