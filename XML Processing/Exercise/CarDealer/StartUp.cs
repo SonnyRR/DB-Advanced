@@ -91,7 +91,7 @@
         {
             using (var context = new CarDealerContext())
             {
-                var xml = GetCarsWithDistance(context);
+                var xml = GetCarsWithTheirListOfParts(context);
                 Console.WriteLine(xml);
             }
         }
@@ -292,6 +292,7 @@
                     Discount = Convert.ToDecimal(element.Element("discount").Value)
                 };
 
+
                 sales.Add(currentSale);
             }
 
@@ -304,10 +305,47 @@
         public static string GetCarsWithDistance(CarDealerContext context)
         {
             var cars = context.Cars
-                .Where(c => c.TravelledDistance > 2_000_000)
-                .OrderBy(c => c.Model)
+                .Where(c => c.TravelledDistance >= 2_000_000)
+                .OrderBy(c => c.Make)
+                .ThenBy(c => c.Model)
                 .Take(10)
                 .ProjectTo<CarWithDistanceDto>()
+                .ToList();
+
+            var xml = SerializeObject(cars, "cars");
+            return xml;
+        }
+
+        public static string GetCarsFromMakeBmw(CarDealerContext context)
+        {
+            var cars = context.Cars
+                .Where(c => c.Make == "BMW")                
+                .OrderBy(c => c.Model)
+                .ThenByDescending(c => c.TravelledDistance)
+                .ProjectTo<BmwCarsDto>()
+                .ToList();
+
+            var xml = SerializeObject(cars, "cars");
+            return xml;
+        }
+
+        public static string GetLocalSuppliers(CarDealerContext context)
+        {
+            var suppliers = context.Suppliers
+                .Where(s => s.IsImporter == false)
+                .ProjectTo<LocalSuppliersDto>()
+                .ToList();
+
+            var xml = SerializeObject(suppliers, "suppliers");
+            return xml;
+        }
+
+        public static string GetCarsWithTheirListOfParts(CarDealerContext context)
+        {
+            var cars = context.Cars
+                .Include(c => c.PartCars)
+                .ThenInclude(pc => pc.Part)
+                .ProjectTo<CarAndPartsDto>()
                 .ToList();
 
             var xml = SerializeObject(cars, "cars");
