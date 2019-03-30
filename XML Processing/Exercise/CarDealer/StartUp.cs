@@ -91,7 +91,7 @@
         {
             using (var context = new CarDealerContext())
             {
-                var xml = GetCarsWithTheirListOfParts(context);
+                var xml = GetTotalSalesByCustomer(context);
                 Console.WriteLine(xml);
             }
         }
@@ -345,10 +345,30 @@
             var cars = context.Cars
                 .Include(c => c.PartCars)
                 .ThenInclude(pc => pc.Part)
+                .OrderByDescending(c => c.TravelledDistance)
+                .ThenBy(c => c.Model)
+                .Take(5)
                 .ProjectTo<CarAndPartsDto>()
                 .ToList();
 
             var xml = SerializeObject(cars, "cars");
+            return xml;
+        }
+
+        public static string GetTotalSalesByCustomer(CarDealerContext context)
+        {
+            var customers = context.Customers
+                .Where(c => c.Sales.Count > 0)
+                .Include(x => x.Sales)
+                .ThenInclude(x => x.Car)
+                .ThenInclude(x => x.PartCars)
+                .ThenInclude(x => x.Part)
+                //.OrderByDescending(x => x.Sales.Sum(y => y.Car.PartCars.Sum(z => z.Part.Price)))
+                .ProjectTo<CustomerTotalSale>()
+                .OrderByDescending(x => x.SpentMoney)
+                .ToList();
+
+            var xml = SerializeObject(customers, "customers");
             return xml;
         }
     }
