@@ -32,17 +32,25 @@
             }
         }
 
-        public static string SerializeObject<T>(T values, string rootName, bool omitXmlDeclaration)
+        public static string SerializeObject<T>(T values, string rootName, bool omitXmlDeclaration = false)
         {
-            var serializer = new XmlSerializer(typeof(T), new XmlRootAttribute(rootName));
             string xml = string.Empty;
 
+            var serializer = new XmlSerializer(typeof(T), new XmlRootAttribute(rootName));
+
+            var settings = new XmlWriterSettings()
+            {
+                Indent = true,
+                OmitXmlDeclaration = omitXmlDeclaration
+            };
+            
             XmlSerializerNamespaces @namespace = new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty });
 
-            using (var writer = new StringWriter())
+            using (var stream = new StringWriter())
+            using (var writer = XmlWriter.Create(stream, settings))
             {
                 serializer.Serialize(writer, values, @namespace);
-                xml = writer.ToString();
+                xml = stream.ToString();
             }
 
             return xml;
@@ -211,10 +219,10 @@
                 .OrderBy(u => u.LastName)
                 .ThenBy(u => u.FirstName)
                 .Take(5)
-                .ProjectTo<GetSoldProductsDto>()                
+                .ProjectTo<GetSoldProductsDto>()
                 .ToList();
 
-            var xml = SerializeObject(users, "Users", false);
+            var xml = SerializeObject(users, "Users");
             return xml;
         }
 
@@ -226,14 +234,14 @@
                 .ThenBy(c => c.TotalRevenue)
                 .ToList();
 
-            var xml = SerializeObject(categories, "Categories", false);
+            var xml = SerializeObject(categories, "Categories");
             return xml;
         }
 
         public static string GetUsersWithProducts(ProductShopContext context)
         {
             var users = context.Users
-                .Include(x => x.ProductsSold)                
+                .Include(x => x.ProductsSold)
                 .Where(u => u.ProductsSold.Count > 0)
                 .OrderByDescending(u => u.ProductsSold.Count)
                 .Take(10)
@@ -242,7 +250,7 @@
 
             var facade = Mapper.Map<UsersAndProductsDto>(users);
 
-            var xml = SerializeObject(facade, "Users", false);
+            var xml = SerializeObject(facade, "Users", true);
             return xml;
         }
     }
