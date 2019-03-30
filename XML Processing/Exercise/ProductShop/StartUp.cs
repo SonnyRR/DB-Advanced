@@ -11,6 +11,7 @@
     using System.ComponentModel.DataAnnotations;
     using System.IO;
     using System.Linq;
+    using System.Xml;
     using System.Xml.Linq;
     using System.Xml.Serialization;
 
@@ -26,19 +27,17 @@
         {
             using (ProductShopContext context = new ProductShopContext())
             {
-                string result = GetSoldProducts(context);
+                string result = GetUsersWithProducts(context);
                 Console.WriteLine(result);
             }
         }
 
-        public static string SerializeObject(object values, string rootName, Type type)
+        public static string SerializeObject<T>(T values, string rootName, bool omitXmlDeclaration)
         {
-            var serializer = new XmlSerializer(type,
-            new XmlRootAttribute(rootName));
-
+            var serializer = new XmlSerializer(typeof(T), new XmlRootAttribute(rootName));
             string xml = string.Empty;
-            XmlSerializerNamespaces @namespace = new XmlSerializerNamespaces();
-            @namespace.Add(string.Empty, string.Empty);
+
+            XmlSerializerNamespaces @namespace = new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty });
 
             using (var writer = new StringWriter())
             {
@@ -200,8 +199,7 @@
                 .ProjectTo<ProductInRangeDto>()
                 .ToList();
 
-            var type = products.GetType();
-            var xml = SerializeObject(products, "Product", type);
+            var xml = SerializeObject(products, "Product", false);
             return xml;
         }
 
@@ -216,9 +214,35 @@
                 .ProjectTo<GetSoldProductsDto>()                
                 .ToList();
 
-            var type = users.GetType();
+            var xml = SerializeObject(users, "Users", false);
+            return xml;
+        }
 
-            var xml = SerializeObject(users, "Users", type);
+        public static string GetCategoriesByProductsCount(ProductShopContext context)
+        {
+            var categories = context.Categories
+                .ProjectTo<CategoriesByProductsDto>()
+                .OrderByDescending(c => c.Count)
+                .ThenBy(c => c.TotalRevenue)
+                .ToList();
+
+            var xml = SerializeObject(categories, "Categories", false);
+            return xml;
+        }
+
+        public static string GetUsersWithProducts(ProductShopContext context)
+        {
+            var users = context.Users
+                .Include(x => x.ProductsSold)                
+                .Where(u => u.ProductsSold.Count > 0)
+                .OrderByDescending(u => u.ProductsSold.Count)
+                .Take(10)
+                .ProjectTo<UserDto>()
+                .ToList();
+
+            var facade = Mapper.Map<UsersAndProductsDto>(users);
+
+            var xml = SerializeObject(facade, "Users", false);
             return xml;
         }
     }
