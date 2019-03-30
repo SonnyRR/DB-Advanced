@@ -32,7 +32,8 @@
             }
         }
 
-        public static string SerializeObject<T>(T values, string rootName, bool omitXmlDeclaration = false, bool indentXml = true)
+        public static string SerializeObject<T>(T values, string rootName, bool omitXmlDeclaration = false, 
+            bool indentXml = true)
         {
             string xml = string.Empty;
 
