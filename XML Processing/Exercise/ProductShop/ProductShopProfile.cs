@@ -30,7 +30,7 @@
 
             // 08 Ex mappings
             CreateMap<ICollection<UserDto>, UsersAndProductsDto>()
-                .ForMember(x => x.Users, y => y.MapFrom(obj => obj))
+                .ForMember(x => x.Users, y => y.MapFrom(obj => obj.Take(10)))
                 .ForMember(x => x.Count, y => y.MapFrom(obj => obj.Count));
 
             CreateMap<User, UserDto>()

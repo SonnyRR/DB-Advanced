@@ -32,7 +32,7 @@
             }
         }
 
-        public static string SerializeObject<T>(T values, string rootName, bool omitXmlDeclaration = false)
+        public static string SerializeObject<T>(T values, string rootName, bool omitXmlDeclaration = false, bool indentXml = true)
         {
             string xml = string.Empty;
 
@@ -40,10 +40,10 @@
 
             var settings = new XmlWriterSettings()
             {
-                Indent = true,
+                Indent = indentXml,
                 OmitXmlDeclaration = omitXmlDeclaration
             };
-            
+
             XmlSerializerNamespaces @namespace = new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty });
 
             using (var stream = new StringWriter())
@@ -244,13 +244,12 @@
                 .Include(x => x.ProductsSold)
                 .Where(u => u.ProductsSold.Count > 0)
                 .OrderByDescending(u => u.ProductsSold.Count)
-                .Take(10)
                 .ProjectTo<UserDto>()
                 .ToList();
 
-            var facade = Mapper.Map<UsersAndProductsDto>(users);
+            var facade = Mapper.Map<UsersAndProductsDto>(users.ToList());
 
-            var xml = SerializeObject(facade, "Users", true);
+            var xml = SerializeObject(facade, "Users");
             return xml;
         }
     }
