@@ -26,9 +26,27 @@
         {
             using (ProductShopContext context = new ProductShopContext())
             {
-                string result = GetProductsInRange(context);
+                string result = GetSoldProducts(context);
                 Console.WriteLine(result);
             }
+        }
+
+        public static string SerializeObject(object values, string rootName, Type type)
+        {
+            var serializer = new XmlSerializer(type,
+            new XmlRootAttribute(rootName));
+
+            string xml = string.Empty;
+            XmlSerializerNamespaces @namespace = new XmlSerializerNamespaces();
+            @namespace.Add(string.Empty, string.Empty);
+
+            using (var writer = new StringWriter())
+            {
+                serializer.Serialize(writer, values, @namespace);
+                xml = writer.ToString();
+            }
+
+            return xml;
         }
 
         private static bool IsValid(object @object)
@@ -177,21 +195,30 @@
             var products = context.Products
                 .Include(x => x.Buyer)
                 .Where(x => x.Price >= 500 && x.Price <= 1000)
+                .OrderBy(x => x.Price)
                 .Take(10)
                 .ProjectTo<ProductInRangeDto>()
                 .ToList();
 
-            var serializer = new XmlSerializer(typeof(List<ProductInRangeDto>),
-                new XmlRootAttribute("Products"));
+            var type = products.GetType();
+            var xml = SerializeObject(products, "Product", type);
+            return xml;
+        }
 
-            string xml = string.Empty;
+        public static string GetSoldProducts(ProductShopContext context)
+        {
+            var users = context.Users
+                .Include(u => u.ProductsSold)
+                .Where(u => u.ProductsSold.Count > 0)
+                .OrderBy(u => u.LastName)
+                .ThenBy(u => u.FirstName)
+                .Take(5)
+                .ProjectTo<GetSoldProductsDto>()                
+                .ToList();
 
-            using (var writer = new StringWriter())
-            {
-                serializer.Serialize(writer, products);
-                xml = writer.ToString();
-            }
+            var type = users.GetType();
 
+            var xml = SerializeObject(users, "Users", type);
             return xml;
         }
     }
