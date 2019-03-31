@@ -12,7 +12,6 @@
     using CarDealer.Models;
     using Microsoft.EntityFrameworkCore;
     using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
     using Newtonsoft.Json.Serialization;
 
     public class StartUp
@@ -166,11 +165,7 @@
                 NullValueHandling = NullValueHandling.Ignore,
 
                 DateFormatString = "dd/MM/yyyy",
-                Formatting = Formatting.Indented,
-                //ContractResolver = new DefaultContractResolver()
-                //{
-                //    NamingStrategy = new CamelCaseNamingStrategy()
-                //}
+                Formatting = Formatting.Indented
             });
 
             return json;
