@@ -210,14 +210,14 @@
 
                 foreach (var pid in partIds)
                 {
+                    if (existingPartsIds.Contains(pid) == false)
+                        continue;
+
                     PartCar currentPair = new PartCar()
                     {
                         Car = currentCar,
                         PartId = pid
                     };
-
-                    if (existingPartsIds.Contains(pid) == false)
-                        continue;
 
                     currentCar.PartCars.Add(currentPair);
                 }
