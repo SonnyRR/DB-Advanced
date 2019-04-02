@@ -6,6 +6,11 @@
     public class Tag
     {
 
+        public Tag()
+        {
+            this.GameTags = new HashSet<GameTag>();
+        }
+
         [Key]
         public int Id { get; set; }
 

@@ -5,6 +5,12 @@
 
     public class Genre
     {
+
+        public Genre()
+        {
+            this.Games = new HashSet<Game>();
+        }
+
         [Key]
         public int Id { get; set; }
 

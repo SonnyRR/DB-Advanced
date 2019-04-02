@@ -6,6 +6,11 @@
 
     public class Card
     {
+        public Card()
+        {
+            this.Purchases = new HashSet<Purchase>();
+        }
+
         [Key]
         public int Id { get; set; }
 

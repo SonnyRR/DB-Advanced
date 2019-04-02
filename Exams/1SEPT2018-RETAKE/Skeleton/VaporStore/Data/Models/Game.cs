@@ -6,6 +6,13 @@ namespace VaporStore.Data.Models
 {
 	public class Game
     {
+
+        public Game()
+        {
+            this.GameTags = new HashSet<GameTag>();
+            this.Purchases = new HashSet<Purchase>();
+        }
+
         [Key]
         public int Id { get; set; }
 

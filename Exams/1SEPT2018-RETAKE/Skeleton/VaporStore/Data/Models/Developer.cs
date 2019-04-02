@@ -5,6 +5,11 @@
 
     public class Developer
     {
+        public Developer()
+        {
+            this.Games = new HashSet<Game>();
+        }
+
         [Key]    
         public int Id { get; set; }
 
