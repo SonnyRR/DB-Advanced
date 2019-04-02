@@ -26,6 +26,7 @@ namespace VaporStore.Data.Models
 
         public ICollection<Purchase> Purchases { get; set; }
 
+        [MinLength(1)]
         public ICollection<GameTag> GameTags { get; set; }
 
     }
