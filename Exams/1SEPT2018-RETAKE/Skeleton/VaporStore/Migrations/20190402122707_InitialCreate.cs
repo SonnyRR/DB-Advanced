@@ -53,7 +53,7 @@ namespace VaporStore.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 20, nullable: true),
+                    Username = table.Column<string>(maxLength: 20, nullable: true),
                     FullName = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: false),
                     Age = table.Column<int>(nullable: false)
@@ -71,7 +71,7 @@ namespace VaporStore.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: false),
                     Price = table.Column<decimal>(nullable: false),
-                    Release = table.Column<DateTime>(nullable: false),
+                    ReleaseDate = table.Column<DateTime>(nullable: false),
                     DeveloperId = table.Column<int>(nullable: false),
                     GenreId = table.Column<int>(nullable: false)
                 },

@@ -10,7 +10,7 @@ using VaporStore.Data;
 namespace VaporStore.Migrations
 {
     [DbContext(typeof(VaporStoreDbContext))]
-    [Migration("20190402120944_InitialCreate")]
+    [Migration("20190402122707_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -71,7 +71,7 @@ namespace VaporStore.Migrations
 
                     b.Property<decimal>("Price");
 
-                    b.Property<DateTime>("Release");
+                    b.Property<DateTime>("ReleaseDate");
 
                     b.HasKey("Id");
 
@@ -160,7 +160,7 @@ namespace VaporStore.Migrations
 
                     b.Property<string>("FullName");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Username")
                         .HasMaxLength(20);
 
                     b.HasKey("Id");

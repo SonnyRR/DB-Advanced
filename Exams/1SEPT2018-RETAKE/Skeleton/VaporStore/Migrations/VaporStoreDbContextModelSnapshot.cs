@@ -69,7 +69,7 @@ namespace VaporStore.Migrations
 
                     b.Property<decimal>("Price");
 
-                    b.Property<DateTime>("Release");
+                    b.Property<DateTime>("ReleaseDate");
 
                     b.HasKey("Id");
 
@@ -158,7 +158,7 @@ namespace VaporStore.Migrations
 
                     b.Property<string>("FullName");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Username")
                         .HasMaxLength(20);
 
                     b.HasKey("Id");
