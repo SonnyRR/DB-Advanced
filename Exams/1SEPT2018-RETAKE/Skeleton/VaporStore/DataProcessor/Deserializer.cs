@@ -78,7 +78,7 @@
                     ReleaseDate = game.ReleaseDate,
                 };
 
-                foreach (var tag in game.Tags)
+                foreach (var tag in game.Tags.Distinct())
                 {
                     Tag currentTag = null;
                     if (currentTags.Any(x => x.Name == tag) == false)
@@ -90,10 +90,7 @@
                     else
                     {
                         currentTag = currentTags.First(x => x.Name == tag);
-                    }
-
-                    currentGame.gam
-                    
+                    }                    
                 }
             }
 
