@@ -28,23 +28,56 @@
 
         public static string ImportGames(VaporStoreDbContext context, string jsonString)
         {
-            var games = JsonConvert.DeserializeObject<List<GameDto>>(jsonString);
+            var gamesDto = JsonConvert.DeserializeObject<List<GameDto>>(jsonString);
 
             StringBuilder builder = new StringBuilder();
 
-            games = games
-                .Where(g => IsValid(g))
-                .ToList();
+            //var gamesFiltered = gamesDto
+            //    .Where(g => IsValid(g) == true)
+            //    .ToList();
+            //
+            //var invalidGamesCount = gamesDto.Except(gamesFiltered).Count();
+            //builder.Append(string.Join(Environment.NewLine, Enumerable.Repeat($"Invalid data", invalidGamesCount)));
 
-            games.ForEach(g =>
+            var mappedGames = new List<Game>();
+
+            foreach (var g in gamesDto)
             {
+                if (IsValid(g) == false)
+                {
+                    builder.AppendLine("Invalid Data");
+                    continue;
+                }
+
                 Game game = new Game();
-                var a = GetObjectFromSet<Genre>(x => x.Name == "FPS", context);
 
-            });
+                var genre = GetObjectFromSet<Genre>(x => x.Name == g.Genre, context);
+                var developer = GetObjectFromSet<Developer>(x => x.Name == g.Developer, context);
 
+                genre = genre ?? new Genre() { Name = g.Genre };
+                developer = developer ?? new Developer() { Name = g.Developer };
 
-            return null;
+                game.Name = g.Name;
+                game.Price = g.Price;
+                game.Developer = developer;
+                game.Genre = genre;
+                game.ReleaseDate = g.ReleaseDate;
+
+                foreach (var tag in g.Tags.Distinct())
+                {
+                    Tag currentTag = GetObjectFromSet<Tag>(x => x.Name == tag, context);
+                    currentTag = currentTag ?? new Tag() { Name = tag };
+
+                    game.GameTags.Add(new GameTag() { Game = game, Tag = currentTag });
+                }
+
+                builder.AppendLine($"Added {game.Name} ({game.Genre.Name}) with {game.GameTags.Count} tags");
+            };
+
+            context.Games.AddRange(mappedGames);
+            context.SaveChanges();
+
+            return builder.ToString().TrimEnd();
         }
 
         public static string ImportUsers(VaporStoreDbContext context, string jsonString)
@@ -65,7 +98,7 @@
         /// <param name="predicate">Predicate.</param>
         /// <param name="context">Context.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        private static T GetObjectFromSet<T>(Func<T, bool> predicate, VaporStoreDbContext context)//object[] propertyValuesToSearch, string[] propertyNames, VaporStoreDbContext context)
+        private static T GetObjectFromSet<T>(Func<T, bool> predicate, VaporStoreDbContext context) //object[] propertyValuesToSearch, string[] propertyNames, VaporStoreDbContext context)
             where T : class, new()
         {
             var dbSetType = context.GetType()
@@ -92,19 +125,11 @@
                 .GetMethod
                 .Invoke(context, null);
 
-            T desiredObject = null;
-
-            var @params = predicate.Method.GetParameters();
-            desiredObject = set
+            T desiredObject = set
                 //.Where(x => x.GetType().GetProperties().IsEntityEqual(propertyNames, propertyValuesToSearch, x) == true)
                 .FirstOrDefault(predicate);
 
-            if (desiredObject == null)
-            {
-
-            }
-
-            return null;
+            return desiredObject;
         }
 
 

@@ -28,7 +28,7 @@
             if (!options.IsConfigured)
             {
                 options
-                    .UseSqlServer(Configuration.ConnectionStringMacOS);
+                    .UseSqlServer(Configuration.ConnectionString);
             }
         }
 
