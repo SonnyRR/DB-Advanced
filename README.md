@@ -1,3 +1,9 @@
+<!--
+  Title: SoftUni C# Databases Advanced
+  Description: Problem solutions & exercises for C# DB Advanced module at SoftUni.
+  Author: Vasil Kotsev
+  -->
+
 # SoftUni - C# Databases Advanced (February 2019) ![copyright](https://i.imgur.com/didc4Tz.png "cc logo")
 
 📖 This is my repo with exercises from C# DB Advanced module - February 2019.
