@@ -4,8 +4,11 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
+    using System.Reflection;
     using System.Text;
+
     using Data;
+    using Microsoft.EntityFrameworkCore;
     using Newtonsoft.Json;
     using VaporStore.Data.Models;
     using VaporStore.DataProcessor.DTOs;
@@ -18,83 +21,28 @@
 
             var validationContext = new System.ComponentModel.DataAnnotations.ValidationContext(@object);
 
-            bool isValid = Validator.TryValidateObject(@object, validationContext, validations, true);
+            bool isValid = Validator.TryValidateObject(@object, validationContext, validations, validateAllProperties: true);
 
             return isValid;
         }
 
         public static string ImportGames(VaporStoreDbContext context, string jsonString)
         {
-            var games = JsonConvert.DeserializeObject<GameDto[]>(jsonString);
+            var games = JsonConvert.DeserializeObject<List<GameDto>>(jsonString);
 
             StringBuilder builder = new StringBuilder();
 
-            var validGames = new List<Game>();
-            var currentDevelopers = new List<Developer>();
-            var currentGenres = new List<Genre>();
-            var currentTags = new List<Tag>();
+            games = games
+                .Where(g => IsValid(g))
+                .ToList();
 
-            foreach (var game in games)
+            games.ForEach(g =>
             {
-                if (string.IsNullOrWhiteSpace(game.Name) || game.ReleaseDate == null
-                    || game.Price < 0.00M || game.Genre == null || game.Developer == null
-                    || game.Tags.Length == 0)
-                {
-                    builder.AppendLine($"Invalid Data{Environment.NewLine}");
-                    continue;
-                }
+                Game game = new Game();
+                var a = GetObjectFromSet<Developer>("a", "Name34", context);
 
-                Developer currentDev = null;
+            });
 
-                if (currentDevelopers.Any(x => x.Name == game.Developer) == false)
-                {
-                    currentDev = new Developer() { Name = game.Developer };
-                    currentDevelopers.Add(currentDev);
-                }
-
-                else
-                {
-                    currentDev = currentDevelopers.First(x => x.Name == game.Developer);
-                }
-
-                Genre currentGenre = null;
-
-                if (currentGenres.Any(x => x.Name == game.Genre) == false)
-                {
-                    currentGenre = new Genre() { Name = game.Genre };
-                    currentGenres.Add(currentGenre);
-                }
-
-                else
-                {
-                    currentGenre = currentGenres.First(x => x.Name == game.Genre);
-                }                
-
-                Game currentGame = new Game()
-                {
-                    Name = game.Name,
-                    Developer = currentDev,
-                    Genre = currentGenre,
-                    ReleaseDate = game.ReleaseDate,
-                };
-
-                foreach (var tag in game.Tags.Distinct())
-                {
-                    Tag currentTag = null;
-                    if (currentTags.Any(x => x.Name == tag) == false)
-                    {
-                        currentTag = new Tag() { Name = tag };
-                        currentTags.Add(currentTag);
-                    }
-
-                    else
-                    {
-                        currentTag = currentTags.First(x => x.Name == tag);
-                    }                    
-                }
-            }
-
-            context.Games.AddRange(validGames);
 
             return null;
         }
@@ -107,6 +55,40 @@
         public static string ImportPurchases(VaporStoreDbContext context, string xmlString)
         {
             throw new NotImplementedException();
+        }
+
+        private static T GetObjectFromSet<T>(string propertyValueToSearch, string destinationProperty, VaporStoreDbContext context)
+            where T : class, new()
+        {
+            var dbSetType = context.GetType()
+                .GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                .FirstOrDefault(p => p.PropertyType.IsAssignableFrom(typeof(DbSet<T>)));
+
+            if (dbSetType == null)
+                throw new ArgumentException($"DbSet with type: {dbSetType.Name} does not exist!");
+
+            var TProperty = typeof(T).GetProperty(destinationProperty, BindingFlags.Instance | BindingFlags.Public);
+
+            if (TProperty == null)
+                throw new ArgumentException($"Property with with type: {destinationProperty} does not exist in class:{typeof(T).Name}!");
+
+
+            var set = (DbSet<T>)dbSetType
+                .GetMethod
+                .Invoke(context, null);
+
+            T desiredObject = null;
+
+            desiredObject = set
+                .Where(x => (string)x.GetType().GetProperty(destinationProperty).GetValue(x) == propertyValueToSearch)
+                .FirstOrDefault();
+
+            if (desiredObject == null)
+            {
+
+            }
+
+            return null;
         }
     }
 }
