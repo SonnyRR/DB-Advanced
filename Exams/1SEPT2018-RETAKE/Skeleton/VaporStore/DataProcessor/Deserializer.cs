@@ -10,6 +10,7 @@
     using Data;
     using Microsoft.EntityFrameworkCore;
     using Newtonsoft.Json;
+    using VaporStore.Data.Enums;
     using VaporStore.Data.Models;
     using VaporStore.DataProcessor.DTOs;
 
@@ -38,8 +39,6 @@
             //
             //var invalidGamesCount = gamesDto.Except(gamesFiltered).Count();
             //builder.Append(string.Join(Environment.NewLine, Enumerable.Repeat($"Invalid data", invalidGamesCount)));
-
-            var mappedGames = new List<Game>();
 
             foreach (var g in gamesDto)
             {
@@ -71,7 +70,6 @@
                     game.GameTags.Add(new GameTag() { Game = game, Tag = currentTag });
                 }
 
-                mappedGames.Add(game);
                 builder.AppendLine($"Added {game.Name} ({game.Genre.Name}) with {game.GameTags.Count} tags");
 
                 context.Games.Add(game);
@@ -84,7 +82,45 @@
 
         public static string ImportUsers(VaporStoreDbContext context, string jsonString)
         {
-            throw new NotImplementedException();
+            var usersDto = JsonConvert.DeserializeObject<List<UserDto>>(jsonString);
+
+            StringBuilder builder = new StringBuilder();
+
+            foreach (var ud in usersDto)
+            {
+                if (IsValid(ud) == false)
+                {
+                    builder.AppendLine("Invalid Data");
+                    continue;
+                }
+
+                User currentUser = new User()
+                {
+                    FullName = ud.FullName,
+                    Username = ud.Username,
+                    Email = ud.Email,
+                    Age = ud.Age
+                };
+
+                foreach (var cd in ud.Cards)
+                {
+                    Card currentCard = new Card()
+                    {
+                        Cvc = cd.Cvc,
+                        Number = cd.Number,
+                        Type = (CardType)Enum.Parse(typeof(CardType), cd.Type, ignoreCase: true)
+                    };
+
+                    currentUser.Cards.Add(currentCard);
+                }
+
+                builder.AppendLine($"Imported {currentUser.Username} with {currentUser.Cards.Count} cards");
+
+                context.Users.Add(currentUser);
+                context.SaveChanges();
+            }
+
+            return builder.ToString().TrimEnd();
         }
 
         public static string ImportPurchases(VaporStoreDbContext context, string xmlString)
@@ -110,25 +146,11 @@
             if (dbSetType == null)
                 throw new ArgumentException($"DbSet with type: {dbSetType.Name} does not exist!");
 
-            //var currentPropertyNames = typeof(T)
-            //    .GetProperties()
-            //    .Select(pn => pn.Name)
-            //    .ToArray();
-
-            //var propertiesThatDoNotMatch = propertyNames
-            //    .Except(currentPropertyNames)
-            //    .ToArray();
-
-            //if (propertiesThatDoNotMatch.Length > 0)
-            //     throw new ArgumentException($@"Properties with names: ""{string.Join(", ", propertiesThatDoNotMatch)}"" does not exist in class: {typeof(T).Name}!");
-
-
             DbSet<T> set = (DbSet<T>)dbSetType
                 .GetMethod
                 .Invoke(context, null);
 
             T desiredObject = set
-                //.Where(x => x.GetType().GetProperties().IsEntityEqual(propertyNames, propertyValuesToSearch, x) == true)
                 .FirstOrDefault(predicate);
 
             return desiredObject;

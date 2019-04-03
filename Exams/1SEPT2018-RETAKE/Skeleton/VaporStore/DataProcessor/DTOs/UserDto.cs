@@ -17,6 +17,7 @@
         [Range(3, 103)]
         public int Age { get; set; }
 
+        [MinLength(1)]
         public CardDto[] Cards { get; set; }
     }
 }
