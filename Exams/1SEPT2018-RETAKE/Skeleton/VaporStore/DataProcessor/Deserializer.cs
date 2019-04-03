@@ -39,7 +39,7 @@
             games.ForEach(g =>
             {
                 Game game = new Game();
-                var a = GetObjectFromSet<Genre>(new object[] { "FPS" }, new string[] { "Name" }, context);
+                var a = GetObjectFromSet<Genre>(x => x.Name == "FPS", context);
 
             });
 
@@ -57,7 +57,15 @@
             throw new NotImplementedException();
         }
 
-        private static T GetObjectFromSet<T>(object[] propertyValuesToSearch, string[] propertyNames, VaporStoreDbContext context)
+
+        /// <summary>
+        /// Gets an object instance from DbSet T
+        /// </summary>
+        /// <returns>The object from set.</returns>
+        /// <param name="predicate">Predicate.</param>
+        /// <param name="context">Context.</param>
+        /// <typeparam name="T">The 1st type parameter.</typeparam>
+        private static T GetObjectFromSet<T>(Func<T, bool> predicate, VaporStoreDbContext context)//object[] propertyValuesToSearch, string[] propertyNames, VaporStoreDbContext context)
             where T : class, new()
         {
             var dbSetType = context.GetType()
@@ -67,17 +75,17 @@
             if (dbSetType == null)
                 throw new ArgumentException($"DbSet with type: {dbSetType.Name} does not exist!");
 
-            var currentPropertyNames = typeof(T)
-                .GetProperties()
-                .Select(pn => pn.Name)
-                .ToArray();
+            //var currentPropertyNames = typeof(T)
+            //    .GetProperties()
+            //    .Select(pn => pn.Name)
+            //    .ToArray();
 
-            var propertiesThatDoNotMatch = propertyNames
-                .Except(currentPropertyNames)
-                .ToArray();
+            //var propertiesThatDoNotMatch = propertyNames
+            //    .Except(currentPropertyNames)
+            //    .ToArray();
 
-            if (propertiesThatDoNotMatch.Length > 0)
-                throw new ArgumentException($@"Properties with names: ""{string.Join(", ", propertiesThatDoNotMatch)}"" does not exist in class: {typeof(T).Name}!");
+            //if (propertiesThatDoNotMatch.Length > 0)
+            //     throw new ArgumentException($@"Properties with names: ""{string.Join(", ", propertiesThatDoNotMatch)}"" does not exist in class: {typeof(T).Name}!");
 
 
             DbSet<T> set = (DbSet<T>)dbSetType
@@ -86,12 +94,10 @@
 
             T desiredObject = null;
 
-
-            var testSet = set.ToList();
-
+            var @params = predicate.Method.GetParameters();
             desiredObject = set
-                .Where(x => x.GetType().GetProperties().IsEntityEqual(propertyNames, propertyValuesToSearch, x) == true)
-                .FirstOrDefault();
+                //.Where(x => x.GetType().GetProperties().IsEntityEqual(propertyNames, propertyValuesToSearch, x) == true)
+                .FirstOrDefault(predicate);
 
             if (desiredObject == null)
             {
@@ -101,6 +107,8 @@
             return null;
         }
 
+
+        [Obsolete]
         private static bool IsEntityEqual(this PropertyInfo[] properties, string[] propertyNames, object[] values, object obj)
         {
             bool isEqual = true;
@@ -109,7 +117,7 @@
 
             for (int i = 0; i < properties.Length; i++)
             {
-                if (properties[i].GetValue(obj) != values[i])
+                if ((string)properties[i].GetValue(obj) != (string)values[i])
                 {
                     isEqual = false;
                     break;

@@ -2,8 +2,9 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using VaporStore.Data.Models;
 
-    public class GameDto
+    public class GameDto : IEquatable<Game>
     {
         [Required]
         public string Name { get; set; }
@@ -22,5 +23,21 @@
 
         [MinLength(1)]
         public string[] Tags { get; set; }
+
+        public bool Equals(Game other)
+        {
+            if (this.Name == other.Name && this.Price == other.Price
+                && this.ReleaseDate == other.ReleaseDate && this.Developer == other.Developer.Name
+                && this.Genre == other.Genre.Name)
+            {
+                return true;
+            }
+
+            else
+            {
+                return false;
+            }
+
+        }
     }
 }
