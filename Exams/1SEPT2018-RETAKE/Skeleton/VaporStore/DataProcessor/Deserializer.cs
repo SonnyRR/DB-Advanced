@@ -73,10 +73,11 @@
 
                 mappedGames.Add(game);
                 builder.AppendLine($"Added {game.Name} ({game.Genre.Name}) with {game.GameTags.Count} tags");
+
+                context.Games.Add(game);
+                context.SaveChanges();
             };
 
-            context.Games.AddRange(mappedGames);
-            context.SaveChanges();
 
             return builder.ToString().TrimEnd();
         }
