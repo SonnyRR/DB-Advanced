@@ -39,7 +39,7 @@
             games.ForEach(g =>
             {
                 Game game = new Game();
-                var a = GetObjectFromSet<Developer>("a", "Name34", context);
+                var a = GetObjectFromSet<Genre>(new object[] { "FPS" }, new string[] { "Name" }, context);
 
             });
 
@@ -57,7 +57,7 @@
             throw new NotImplementedException();
         }
 
-        private static T GetObjectFromSet<T>(string propertyValueToSearch, string destinationProperty, VaporStoreDbContext context)
+        private static T GetObjectFromSet<T>(object[] propertyValuesToSearch, string[] propertyNames, VaporStoreDbContext context)
             where T : class, new()
         {
             var dbSetType = context.GetType()
@@ -67,20 +67,30 @@
             if (dbSetType == null)
                 throw new ArgumentException($"DbSet with type: {dbSetType.Name} does not exist!");
 
-            var TProperty = typeof(T).GetProperty(destinationProperty, BindingFlags.Instance | BindingFlags.Public);
+            var currentPropertyNames = typeof(T)
+                .GetProperties()
+                .Select(pn => pn.Name)
+                .ToArray();
 
-            if (TProperty == null)
-                throw new ArgumentException($"Property with with type: {destinationProperty} does not exist in class:{typeof(T).Name}!");
+            var propertiesThatDoNotMatch = propertyNames
+                .Except(currentPropertyNames)
+                .ToArray();
+
+            if (propertiesThatDoNotMatch.Length > 0)
+                throw new ArgumentException($@"Properties with names: ""{string.Join(", ", propertiesThatDoNotMatch)}"" does not exist in class: {typeof(T).Name}!");
 
 
-            var set = (DbSet<T>)dbSetType
+            DbSet<T> set = (DbSet<T>)dbSetType
                 .GetMethod
                 .Invoke(context, null);
 
             T desiredObject = null;
 
+
+            var testSet = set.ToList();
+
             desiredObject = set
-                .Where(x => (string)x.GetType().GetProperty(destinationProperty).GetValue(x) == propertyValueToSearch)
+                .Where(x => x.GetType().GetProperties().IsEntityEqual(propertyNames, propertyValuesToSearch, x) == true)
                 .FirstOrDefault();
 
             if (desiredObject == null)
@@ -89,6 +99,24 @@
             }
 
             return null;
+        }
+
+        private static bool IsEntityEqual(this PropertyInfo[] properties, string[] propertyNames, object[] values, object obj)
+        {
+            bool isEqual = true;
+
+            properties = properties.Where(p => propertyNames.Contains(p.Name)).ToArray();
+
+            for (int i = 0; i < properties.Length; i++)
+            {
+                if (properties[i].GetValue(obj) != values[i])
+                {
+                    isEqual = false;
+                    break;
+                }
+            }
+
+            return isEqual;
         }
     }
 }
