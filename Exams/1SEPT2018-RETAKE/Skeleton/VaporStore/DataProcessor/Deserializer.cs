@@ -71,6 +71,7 @@
                     game.GameTags.Add(new GameTag() { Game = game, Tag = currentTag });
                 }
 
+                mappedGames.Add(game);
                 builder.AppendLine($"Added {game.Name} ({game.Genre.Name}) with {game.GameTags.Count} tags");
             };
 
