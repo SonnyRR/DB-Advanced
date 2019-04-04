@@ -6,6 +6,7 @@
     using System.Linq;
     using VaporStore.Data.Models;
     using VaporStore.DataProcessor.DTOs.Export;
+    using System.Globalization;
 
     public class VaporStoreProfile : Profile
     {
@@ -32,6 +33,14 @@
 
             CreateMap<User, UserExportDto>()
                 .ForMember(x => x.Purchases, y => y.MapFrom(obj => obj.Cards.Select(z => z.Purchases)));
+
+            CreateMap<Purchase, PurchaseExportDto>()
+                .ForMember(x => x.Card, y => y.MapFrom(obj => obj.Card.Number))
+                .ForMember(x => x.Game, y => y.MapFrom(obj => obj.Game))
+                .ForMember(x => x.Date, y => y.MapFrom(obj => obj.Date.ToString("yyyy-MM-dd H:mm", CultureInfo.InvariantCulture)));
+
+            CreateMap<Game, GameExportDtoXML>()
+                .ForMember(x => x.Genre, y => y.MapFrom(obj => obj.Genre.Name));
 
             #endregion
         }

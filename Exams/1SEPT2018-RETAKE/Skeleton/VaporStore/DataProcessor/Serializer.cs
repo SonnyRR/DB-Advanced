@@ -41,7 +41,7 @@
 
             var purchases = context.Users
                 .Include(x => x.Cards)
-                    .ThenInclude(x => x.Purchases.Where(z => z.Type == enumParsed))
+                    .ThenInclude(x => x.Purchases)
                     .ThenInclude(x => x.Game)
                 .ProjectTo<UserExportDto>()
                 .ToList();

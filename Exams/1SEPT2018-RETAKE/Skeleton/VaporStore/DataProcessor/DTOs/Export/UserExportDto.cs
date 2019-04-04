@@ -1,4 +1,4 @@
-﻿namespace VaporStore.DataProcessor.DTOs.Export
+﻿ namespace VaporStore.DataProcessor.DTOs.Export
 {
     using System;
     using System.Collections.Generic;
@@ -11,6 +11,6 @@
         public string Username { get; set; }
 
         [XmlArray("Purchases")]
-        public List<PurchaseDto> Purchases { get; set; } = new List<PurchaseDto>();
+        public List<PurchaseExportDto> Purchases { get; set; } = new List<PurchaseExportDto>();
     }
 }
