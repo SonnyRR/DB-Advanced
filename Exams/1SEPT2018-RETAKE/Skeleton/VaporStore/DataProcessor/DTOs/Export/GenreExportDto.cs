@@ -1,6 +1,5 @@
 ﻿namespace VaporStore.DataProcessor.DTOs.Export
 {
-    using System;
     using System.Collections.Generic;
 
     public class GenreExportDto
@@ -9,6 +8,8 @@
 
         public string Genre { get; set; }
 
-        public List<GameExportDto> MyProperty { get; set; }
+        public List<GameExportDto> Games { get; set; } = new List<GameExportDto>();
+
+        public int TotalPlayers { get; set; }
     }
 }

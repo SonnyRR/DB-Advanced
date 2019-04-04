@@ -1,5 +1,7 @@
 ﻿namespace VaporStore.DataProcessor.DTOs.Export
 {
+    using System.Collections.Generic;
+
     public class GameExportDto
     {
         public int Id { get; set; }
@@ -8,7 +10,7 @@
 
         public string Developer { get; set; }
 
-        public string[] Tags { get; set; }
+        public string Tags { get; set; }
 
         public int Players { get; set; }
     }
