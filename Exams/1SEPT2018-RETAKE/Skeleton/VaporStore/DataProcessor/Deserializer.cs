@@ -170,6 +170,7 @@
 
                 currentPurchase.Game = currentGame;
                 currentPurchase.Card = currentCard;
+                currentPurchase.ProductKey = currentPurchaseDto.ProductKey;
 
                 string currentUsernameOfBuyer =
                     GetObjectFromSet<User>(x => x.Cards.Any(z => z.Number == currentCard.Number), context).Username;
