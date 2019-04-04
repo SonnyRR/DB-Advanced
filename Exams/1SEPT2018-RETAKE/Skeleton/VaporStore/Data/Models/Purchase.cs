@@ -1,14 +1,13 @@
 ﻿namespace VaporStore.Data.Models
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using VaporStore.Data.Enums;
 
     public class Purchase
     {
 
-        [Key]    
+        [Key]
         public int Id { get; set; }
 
         public PurchaseType Type { get; set; }

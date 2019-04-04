@@ -3,9 +3,11 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Globalization;
     using System.Linq;
     using System.Reflection;
     using System.Text;
+    using System.Xml.Linq;
 
     using Data;
     using Microsoft.EntityFrameworkCore;
@@ -125,7 +127,60 @@
 
         public static string ImportPurchases(VaporStoreDbContext context, string xmlString)
         {
-            throw new NotImplementedException();
+            XDocument document = XDocument.Parse(xmlString);
+            string dateFormat = @"dd/MM/yyyy HH:mm";
+
+            var elements = document.Root.Elements().ToList();
+
+            StringBuilder builder = new StringBuilder();
+
+            foreach (var element in elements)
+            {
+                var currentPurchaseDto = new PurchaseDto()
+                {
+                    Title = element.Attribute("title").Value,
+                    Type = element.Element("Type").Value,
+                    ProductKey = element.Element("Key").Value,
+                    Date = DateTime.ParseExact(element.Element("Date").Value, dateFormat, CultureInfo.InvariantCulture),
+                    Card = element.Element("Card").Value
+                };
+
+                PurchaseType currentPurchaseType;
+
+                bool isTypeParseSuccessfull = Enum.TryParse<PurchaseType>(currentPurchaseDto.Type, out currentPurchaseType);
+
+                if (IsValid(currentPurchaseDto) == false || isTypeParseSuccessfull == false)
+                    continue;
+
+                Purchase currentPurchase = new Purchase()
+                {
+                    Date = currentPurchaseDto.Date,
+                    Type = currentPurchaseType
+                };
+
+                var currentGame = GetObjectFromSet<Game>(x => x.Name == currentPurchaseDto.Title, context);
+
+                if (currentGame == null)
+                    continue;
+
+                var currentCard = GetObjectFromSet<Card>(x => x.Number == currentPurchaseDto.Card, context);
+
+                if (currentCard == null)
+                    continue;
+
+                currentPurchase.Game = currentGame;
+                currentPurchase.Card = currentCard;
+
+                string currentUsernameOfBuyer =
+                    GetObjectFromSet<User>(x => x.Cards.Any(z => z.Number == currentCard.Number), context).Username;
+
+                context.Purchases.Add(currentPurchase);
+                builder.AppendLine($"Imported {currentGame.Name} for {currentUsernameOfBuyer}");
+            }
+
+            context.SaveChanges();
+
+            return builder.ToString().TrimEnd();
         }
 
 
@@ -136,7 +191,7 @@
         /// <param name="predicate">Predicate.</param>
         /// <param name="context">Context.</param>
         /// <typeparam name="T">The 1st type parameter.</typeparam>
-        private static T GetObjectFromSet<T>(Func<T, bool> predicate, VaporStoreDbContext context) //object[] propertyValuesToSearch, string[] propertyNames, VaporStoreDbContext context)
+        private static T GetObjectFromSet<T>(Func<T, bool> predicate, VaporStoreDbContext context)
             where T : class, new()
         {
             var dbSetType = context.GetType()
