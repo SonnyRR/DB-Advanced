@@ -12,5 +12,8 @@
 
         [XmlArray("Purchases")]
         public List<PurchaseExportDto> Purchases { get; set; } = new List<PurchaseExportDto>();
+
+        [XmlElement("TotalSpent")]
+        public decimal TotalSpent { get; set; }
     }
 }

@@ -43,7 +43,11 @@
                 .Include(x => x.Cards)
                     .ThenInclude(x => x.Purchases)
                     .ThenInclude(x => x.Game)
+                .Where(x => x.Cards.SelectMany(y => y.Purchases).Any(z => z.Type == enumParsed))
                 .ProjectTo<UserExportDto>()
+                .ToList()
+                .OrderByDescending(x => x.TotalSpent)
+                .ThenBy(x=>x.Username)
                 .ToList();
             ;
 
