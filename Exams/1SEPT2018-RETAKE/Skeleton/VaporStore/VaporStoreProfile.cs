@@ -35,8 +35,12 @@
             PurchaseType desiredType = 0;
 
             CreateMap<User, UserExportDto>()
-                .ForMember(x => x.Purchases, y => y.MapFrom(obj => obj.Cards.SelectMany(z => z.Purchases).Where(z => z.Type == desiredType).OrderBy(z => z.Date)))
-                .ForMember(x => x.TotalSpent, y => y.MapFrom(obj => obj.Cards.SelectMany(z => z.Purchases).Sum(z => z.Game.Price)));
+                .ForMember(x => x.Purchases, 
+                    y => y.MapFrom(obj => obj.Cards.SelectMany(z => z.Purchases)
+                    .Where(z => z.Type == desiredType).OrderBy(z => z.Date)))
+                .ForMember(x => x.TotalSpent, 
+                    y => y.MapFrom(obj => obj.Cards.SelectMany(z => z.Purchases)
+                    .Where(z => z.Type == desiredType).Sum(z => z.Game.Price)));
 
             CreateMap<Purchase, PurchaseExportDto>()
                 .ForMember(x => x.Card, y => y.MapFrom(obj => obj.Card.Number))
