@@ -7,6 +7,7 @@
     using VaporStore.Data.Models;
     using VaporStore.DataProcessor.DTOs.Export;
     using System.Globalization;
+    using VaporStore.Data.Enums;
 
     public class VaporStoreProfile : Profile
     {
@@ -31,8 +32,10 @@
 
             #region XML Export mappings
 
+            PurchaseType desiredType = 0;
+
             CreateMap<User, UserExportDto>()
-                .ForMember(x => x.Purchases, y => y.MapFrom(obj => obj.Cards.SelectMany(z => z.Purchases).OrderBy(z => z.Date)))
+                .ForMember(x => x.Purchases, y => y.MapFrom(obj => obj.Cards.SelectMany(z => z.Purchases).Where(z => z.Type == desiredType).OrderBy(z => z.Date)))
                 .ForMember(x => x.TotalSpent, y => y.MapFrom(obj => obj.Cards.SelectMany(z => z.Purchases).Sum(z => z.Game.Price)));
 
             CreateMap<Purchase, PurchaseExportDto>()

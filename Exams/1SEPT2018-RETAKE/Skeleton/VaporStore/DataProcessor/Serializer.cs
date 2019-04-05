@@ -1,6 +1,7 @@
 ﻿namespace VaporStore.DataProcessor
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Xml;
@@ -44,14 +45,14 @@
                     .ThenInclude(x => x.Purchases)
                     .ThenInclude(x => x.Game)
                 .Where(x => x.Cards.SelectMany(y => y.Purchases).Any(z => z.Type == enumParsed))
-                .ProjectTo<UserExportDto>()
+                .ProjectTo<UserExportDto>(new { desiredType = enumParsed })
                 .ToList()
                 .OrderByDescending(x => x.TotalSpent)
-                .ThenBy(x=>x.Username)
+                .ThenBy(x => x.Username)
                 .ToList();
-            ;
 
-            return null;
+            var xml = SerializeObject<List<UserExportDto>>(purchases, "Users");
+            return xml;
         }
 
         public static string SerializeObject<T>(T values, string rootName, bool omitXmlDeclaration = false,
