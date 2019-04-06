@@ -56,7 +56,31 @@
 
         public static string ImportPrisonersMails(SoftJailDbContext context, string jsonString)
         {
-            throw new NotImplementedException();
+            var parsed = KotsevExamHelper.DeserializeObjectFromJson<List<PrisonerImportDto>>(jsonString);
+            var mapped = new List<Prisoner>();
+
+            var builder = new StringBuilder();
+
+            foreach (var dto in parsed)
+            {
+
+                if (!KotsevExamHelper.IsValid(dto) || dto.Mails.Any(x => KotsevExamHelper.IsValid(x) == false))
+                {
+                    builder.AppendLine("Invalid Data");
+                    continue;
+                }
+
+                var currentPrisoner = Mapper.Map<Prisoner>(dto);
+                mapped.Add(currentPrisoner);
+
+                builder.AppendLine($"Imported {currentPrisoner.FullName} {currentPrisoner.Age} years old");
+
+            }
+
+            context.Prisoners.AddRange(mapped);
+            context.SaveChanges();
+
+            return builder.ToString().TrimEnd();
         }
 
         public static string ImportOfficersPrisoners(SoftJailDbContext context, string xmlString)

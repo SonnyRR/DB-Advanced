@@ -11,6 +11,7 @@
 
     using Microsoft.EntityFrameworkCore;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Converters;
     using Newtonsoft.Json.Serialization;
     using JsonFormatting = Newtonsoft.Json.Formatting;
 
@@ -119,9 +120,12 @@
         /// <returns>Object(s) from json.</returns>
         /// <param name="jsonInput">Json input.</param>
         /// <typeparam name="T">Type of desired object</typeparam>
-        public static T DeserializeObjectFromJson<T>(string jsonInput)
+        public static T DeserializeObjectFromJson<T>(string jsonInput, string dateFormatString = "dd/MM/yyyy")
         {
-            var deserializedObject = JsonConvert.DeserializeObject<T>(jsonInput);
+            var jsonSettings = new JsonSerializerSettings();
+            jsonSettings.DateFormatString = dateFormatString;
+
+            var deserializedObject = JsonConvert.DeserializeObject<T>(jsonInput, jsonSettings);
 
             return deserializedObject;
         }

@@ -17,6 +17,11 @@
                 .ForMember(x => x.Department, y => y.MapFrom(src => currentDepartment));
 
             CreateMap<DepartmentImportDto, Department>();
+
+            // 02 Import mappings
+            CreateMap<PrisonerImportDto, Prisoner>();
+            CreateMap<MailInsertDto, Mail>();
+
         }
     }
 }
