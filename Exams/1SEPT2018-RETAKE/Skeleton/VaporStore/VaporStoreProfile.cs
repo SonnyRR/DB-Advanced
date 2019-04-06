@@ -19,7 +19,7 @@
             CreateMap<Genre, GenreExportDto>()
                 .ForMember(x => x.Genre, y => y.MapFrom(obj => obj.Name))
                 .ForMember(x => x.Games,
-                    y => y.MapFrom(obj => obj.Games.OrderByDescending(z => z.Purchases.Count).ThenBy(z => z.Id)))
+                    y => y.MapFrom(obj => obj.Games.Where(z => z.Purchases.Count > 0).OrderByDescending(z => z.Purchases.Count).ThenBy(z => z.Id)))
                 .ForMember(x => x.TotalPlayers, y => y.MapFrom(obj => obj.Games.Sum(z => z.Purchases.Count)));
 
             CreateMap<Game, GameExportDto>()
@@ -35,10 +35,10 @@
             PurchaseType desiredType = 0;
 
             CreateMap<User, UserExportDto>()
-                .ForMember(x => x.Purchases, 
+                .ForMember(x => x.Purchases,
                     y => y.MapFrom(obj => obj.Cards.SelectMany(z => z.Purchases)
                     .Where(z => z.Type == desiredType).OrderBy(z => z.Date)))
-                .ForMember(x => x.TotalSpent, 
+                .ForMember(x => x.TotalSpent,
                     y => y.MapFrom(obj => obj.Cards.SelectMany(z => z.Purchases)
                     .Where(z => z.Type == desiredType).Sum(z => z.Game.Price)));
 
