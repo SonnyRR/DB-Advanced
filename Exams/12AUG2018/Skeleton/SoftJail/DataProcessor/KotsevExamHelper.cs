@@ -40,6 +40,15 @@
             return desiredObject;
         }
 
+        /// <summary>
+        /// Serializes the object(s) to XML.
+        /// </summary>
+        /// <returns>XML string.</returns>
+        /// <param name="values">Object(s) to serialize.</param>
+        /// <param name="rootName">Root name.</param>
+        /// <param name="omitXmlDeclaration">If set to <c>true</c> omit xml declaration.</param>
+        /// <param name="indentXml">If set to <c>true</c> indent xml.</param>
+        /// <typeparam name="T">Type of object to serialize</typeparam>
         public static string SerializeObject<T>(T values, string rootName, bool omitXmlDeclaration = false,
             bool indentXml = true)
         {
