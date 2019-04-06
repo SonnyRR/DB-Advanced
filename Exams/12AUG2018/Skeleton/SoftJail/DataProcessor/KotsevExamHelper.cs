@@ -1,7 +1,8 @@
-﻿namespace SoftJail.DataProcessor
+﻿namespace KotsevHelper
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -23,10 +24,14 @@
         /// <param name="context">Context.</param>
         /// <typeparam name="T">Type of object from set</typeparam>
         /// <typeparam name="V">Type of DbContext</typeparam>
-        private static T GetObjectFromSet<T, V>(Func<T, bool> predicate, V context)
+        public static T GetObjectFromSet<T, V>(Func<T, bool> predicate, V context)
             where T : class, new()
             where V : DbContext
         {
+
+            //if (context.GetType().BaseType != typeof(DbContext))
+            //throw new ArgumentException("")
+
             var dbSetType = context.GetType()
                 .GetProperties(BindingFlags.Instance | BindingFlags.Public)
                 .FirstOrDefault(p => p.PropertyType.IsAssignableFrom(typeof(DbSet<T>)));
@@ -120,6 +125,19 @@
 
             return deserializedObject;
         }
+
+
+        public static bool IsValid(object @object, bool validateAllProperties = true)
+        {
+            ICollection<ValidationResult> validations = new List<ValidationResult>();
+
+            var validationContext = new System.ComponentModel.DataAnnotations.ValidationContext(@object);
+
+            bool isValid = Validator.TryValidateObject(@object, validationContext, validations, validateAllProperties: validateAllProperties);
+
+            return isValid;
+        }
+
 
         [Obsolete]
         private static bool IsEntityEqual

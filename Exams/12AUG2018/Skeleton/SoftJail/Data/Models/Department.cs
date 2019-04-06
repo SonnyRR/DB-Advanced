@@ -5,6 +5,12 @@
 
     public class Department
     {
+
+        public Department()
+        {
+            this.Cells = new HashSet<Cell>();
+        }
+
         [Key]
         public int Id { get; set; }
 
