@@ -14,7 +14,7 @@
 
             Mapper.Initialize(config => config.AddProfile<SoftJailProfile>());
 
-            //ResetDatabase(context, shouldDropDatabase: false);
+            ResetDatabase(context, shouldDropDatabase: false);
 
             var projectDir = GetProjectDirectory();
 
@@ -36,18 +36,18 @@
 
         private static void ImportEntities(SoftJailDbContext context, string baseDir, string exportDir)
         {
-            //var departmentsCells =
-            //    DataProcessor.Deserializer.ImportDepartmentsCells(context,
-            //        File.ReadAllText(baseDir + "ImportDepartmentsCells.json"));
+            var departmentsCells =
+                DataProcessor.Deserializer.ImportDepartmentsCells(context,
+                    File.ReadAllText(baseDir + "ImportDepartmentsCells.json"));
             //PrintAndExportEntityToFile(departmentsCells, exportDir + "ImportDepartmentsCells.txt");
 
             var prisonersMails =
                 DataProcessor.Deserializer.ImportPrisonersMails(context,
                     File.ReadAllText(baseDir + "ImportPrisonersMails.json"));
-            PrintAndExportEntityToFile(prisonersMails, exportDir + "ImportPrisonersMails.txt");
+            //PrintAndExportEntityToFile(prisonersMails, exportDir + "ImportPrisonersMails.txt");
 
             var officersPrisoners = DataProcessor.Deserializer.ImportOfficersPrisoners(context, File.ReadAllText(baseDir + "ImportOfficersPrisoners.xml"));
-            PrintAndExportEntityToFile(officersPrisoners, exportDir + "ImportOfficersPrisoners.txt");
+            //PrintAndExportEntityToFile(officersPrisoners, exportDir + "ImportOfficersPrisoners.txt");
         }
 
         private static void ExportEntities(SoftJailDbContext context, string exportDir)
